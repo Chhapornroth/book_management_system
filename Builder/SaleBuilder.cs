@@ -11,35 +11,46 @@ namespace WindowsFormsApp.Builder
     {
         private readonly Sale _sale = new();
 
-        public SaleBuilder WithCustomer(string customerName)
+        public SaleBuilder SetCustomerName(string customerName)
         {
             _sale.CustomerName = customerName;
             return this;
         }
 
-        public SaleBuilder WithBook(int bookId, decimal price, int quantity)
+        public SaleBuilder SetBookId(int bookId)
         {
             _sale.BookId = bookId;
-            _sale.Price = price;
-            _sale.Quantity = quantity;
             return this;
         }
 
-        public SaleBuilder WithEmployee(int employeeId)
+        public SaleBuilder SetEmployeeId(int employeeId)
         {
             _sale.EmployeeId = employeeId;
             return this;
         }
 
-        public SaleBuilder WithDiscount(decimal discount)
+        public SaleBuilder SetPrice(decimal price)
+        {
+            _sale.Price = price;
+            return this;
+        }
+
+        public SaleBuilder SetQuantity(int quantity)
+        {
+            _sale.Quantity = quantity;
+            return this;
+        }
+
+        public SaleBuilder SetDiscount(decimal discount)
         {
             _sale.Discount = discount;
             return this;
         }
 
-        public SaleBuilder WithTimestamp(DateTime createdAt)
+        public SaleBuilder SetSaleDate(DateTime saleDate)
         {
-            _sale.CreatedAt = createdAt;
+            _sale.SaleDate = saleDate;
+            _sale.CreatedAt = DateTime.Now;
             return this;
         }
 

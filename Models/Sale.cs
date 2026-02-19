@@ -13,6 +13,7 @@ namespace WindowsFormsApp.Models
         public int Quantity { get; set; }
         public decimal Discount { get; set; } // 0.0 - 1.0
         public decimal Total { get; set; }
+        public DateTime SaleDate { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

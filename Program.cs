@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using WindowsFormsApp.Forms;
 
 namespace WindowsFormsApp
 {
@@ -13,7 +14,7 @@ namespace WindowsFormsApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new DashboardForm());
         }
     }
 }

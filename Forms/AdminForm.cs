@@ -226,7 +226,7 @@ namespace WindowsFormsApp.Forms
                 b.Title,
                 b.AuthorName,
                 b.Stock,
-                b.AddingDate.ToShortDateString()
+                AddingDate = b.AddingDate.ToShortDateString()
             }).ToList();
         }
 
@@ -239,7 +239,7 @@ namespace WindowsFormsApp.Forms
                 e.Name,
                 e.Gender,
                 e.PhoneNumber,
-                e.Birthday.ToShortDateString()
+                Birthday = e.Birthday.ToShortDateString()
             }).ToList();
         }
 
@@ -256,7 +256,7 @@ namespace WindowsFormsApp.Forms
                 s.Quantity,
                 Discount = (s.Discount * 100).ToString("F0") + "%",
                 Total = s.Total.ToString("C"),
-                s.SaleDate.ToShortDateString()
+                SaleDate = s.SaleDate.ToShortDateString()
             }).ToList();
         }
 

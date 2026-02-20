@@ -24,11 +24,11 @@ namespace WindowsFormsApp.Data
             {
                 employees.Add(new Employee
                 {
-                    EmployeeId = reader.GetInt32("employee_id"),
-                    Name = reader.GetString("name"),
-                    Gender = reader.GetString("gender"),
-                    PhoneNumber = reader.GetString("phone_number"),
-                    Birthday = reader.GetDateTime("birthday")
+                    EmployeeId = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Gender = reader.GetString(2),
+                    PhoneNumber = reader.GetString(3),
+                    Birthday = reader.GetDateTime(4)
                 });
             }
             
@@ -48,11 +48,11 @@ namespace WindowsFormsApp.Data
             {
                 return new Employee
                 {
-                    EmployeeId = reader.GetInt32("employee_id"),
-                    Name = reader.GetString("name"),
-                    Gender = reader.GetString("gender"),
-                    PhoneNumber = reader.GetString("phone_number"),
-                    Birthday = reader.GetDateTime("birthday")
+                    EmployeeId = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Gender = reader.GetString(2),
+                    PhoneNumber = reader.GetString(3),
+                    Birthday = reader.GetDateTime(4)
                 };
             }
             
@@ -72,11 +72,11 @@ namespace WindowsFormsApp.Data
             {
                 return new Employee
                 {
-                    EmployeeId = reader.GetInt32("employee_id"),
-                    Name = reader.GetString("name"),
-                    Gender = reader.GetString("gender"),
-                    PhoneNumber = reader.GetString("phone_number"),
-                    Birthday = reader.GetDateTime("birthday")
+                    EmployeeId = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Gender = reader.GetString(2),
+                    PhoneNumber = reader.GetString(3),
+                    Birthday = reader.GetDateTime(4)
                 };
             }
             

@@ -34,7 +34,7 @@ namespace WindowsFormsApp.Forms
         public CashierForm(User user)
         {
             _currentUser = user;
-            _saleNotifier.AddObserver(new LoggingSaleObserver());
+            _saleNotifier.Attach(new LoggingSaleObserver());
             InitializeComponent();
             LoadBooks();
         }
@@ -190,7 +190,7 @@ namespace WindowsFormsApp.Forms
                     b.Title,
                     b.AuthorName,
                     b.Stock,
-                    b.AddingDate.ToShortDateString()
+                    AddingDate = b.AddingDate.ToShortDateString()
                 }).ToList();
             }
         }
@@ -207,7 +207,7 @@ namespace WindowsFormsApp.Forms
                 s.Quantity,
                 Discount = (s.Discount * 100).ToString("F0") + "%",
                 Total = s.Total.ToString("C"),
-                s.SaleDate.ToShortDateString()
+                SaleDate = s.SaleDate.ToShortDateString()
             }).ToList();
         }
 
@@ -293,7 +293,7 @@ namespace WindowsFormsApp.Forms
                 _bookRepo.UpdateStock(item.BookId, item.Quantity);
 
                 // Notify observers (Observer Pattern)
-                _saleNotifier.NotifySaleCreated(sale);
+                _saleNotifier.Notify(sale);
             }
 
             MessageBox.Show($"Sale processed successfully! Total: {_currentTotal:C}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

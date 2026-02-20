@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WindowsFormsApp.Data;
 using WindowsFormsApp.Factory;
+using WindowsFormsApp.Models;
 
 namespace WindowsFormsApp.Forms
 {
@@ -100,7 +101,8 @@ namespace WindowsFormsApp.Forms
             
             if (employee != null && employee.Name.Equals(txtFullName.Text, StringComparison.OrdinalIgnoreCase))
             {
-                var user = UserFactory.CreateUser(_role, employee.EmployeeId, employee.Name);
+                var roleEnum = _role == "Admin" ? UserRole.Admin : UserRole.Cashier;
+                var user = UserFactory.CreateUser(roleEnum, employee.EmployeeId, employee.Name);
                 
                 this.Hide();
                 

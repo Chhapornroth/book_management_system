@@ -103,7 +103,7 @@ Replace:
 **Example:**
 ```csharp
 private readonly string _connectionString =
-    "Host=localhost;Port=5432;Database=bookstore_db;Username=postgres;Password=mypassword123;";
+    "Host=localhost;Port=5433;Database=bookstore_db;Username=postgres;Password=2003;";
 ```
 
 ### Step 5: Verify the Setup

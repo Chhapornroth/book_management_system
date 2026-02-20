@@ -26,15 +26,15 @@ namespace WindowsFormsApp.Data
             {
                 sales.Add(new Sale
                 {
-                    SaleId = reader.GetInt32("sale_id"),
-                    CustomerName = reader.GetString("customer_name"),
-                    BookId = reader.GetInt32("book_id"),
-                    EmployeeId = reader.GetInt32("employee_id"),
-                    Price = reader.GetDecimal("price"),
-                    Quantity = reader.GetInt32("quantity"),
-                    Discount = reader.GetDecimal("discount"),
-                    Total = reader.GetDecimal("total"),
-                    SaleDate = reader.GetDateTime("sale_date")
+                    SaleId = reader.GetInt32(0),
+                    CustomerName = reader.GetString(1),
+                    BookId = reader.GetInt32(2),
+                    EmployeeId = reader.GetInt32(3),
+                    Price = reader.GetDecimal(4),
+                    Quantity = reader.GetInt32(5),
+                    Discount = reader.GetDecimal(6),
+                    Total = reader.GetDecimal(7),
+                    SaleDate = reader.GetDateTime(8)
                 });
             }
             

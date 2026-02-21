@@ -98,24 +98,26 @@ namespace WindowsFormsApp.Forms
             };
 
             var inputWidth = 350;
+            var startY = 0; // Start from top of content area (padding is handled by panel)
 
             lblFullName = new Label
             {
                 Text = "Full Name",
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.Black,
-                AutoSize = true,
-                Location = new Point(50, 10),
+                AutoSize = false,
+                Location = new Point(0, startY),
                 BackColor = Color.FromArgb(245, 247, 250),
                 Visible = true,
-                Size = new Size(100, 20)
+                Size = new Size(inputWidth, 25),
+                TextAlign = ContentAlignment.MiddleLeft
             };
 
             txtFullName = new TextBox
             {
                 PlaceholderText = "Enter your full name",
                 Size = new Size(inputWidth, 38),
-                Location = new Point(50, 38),
+                Location = new Point(0, startY + 28),
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
@@ -128,18 +130,19 @@ namespace WindowsFormsApp.Forms
                 Text = "Phone Number",
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.Black,
-                AutoSize = true,
-                Location = new Point(50, 90),
+                AutoSize = false,
+                Location = new Point(0, startY + 80),
                 BackColor = Color.FromArgb(245, 247, 250),
                 Visible = true,
-                Size = new Size(120, 20)
+                Size = new Size(inputWidth, 25),
+                TextAlign = ContentAlignment.MiddleLeft
             };
 
             txtPassword = new TextBox
             {
                 PlaceholderText = "Enter your phone number",
                 Size = new Size(inputWidth, 38),
-                Location = new Point(50, 118),
+                Location = new Point(0, startY + 108),
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
@@ -152,7 +155,7 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "Sign In",
                 Size = new Size(inputWidth, 48),
-                Location = new Point(50, 170),
+                Location = new Point(0, startY + 170),
                 Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                 BackColor = _role == "Admin" ? Color.FromArgb(52, 152, 219) : Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
@@ -171,10 +174,6 @@ namespace WindowsFormsApp.Forms
             contentPanel.Controls.Add(txtFullName);
             contentPanel.Controls.Add(txtPassword);
             contentPanel.Controls.Add(btnLogin);
-            
-            // Bring labels to front to ensure visibility
-            lblFullName.BringToFront();
-            lblPhone.BringToFront();
 
             // Center all controls on resize
             void CenterControls()

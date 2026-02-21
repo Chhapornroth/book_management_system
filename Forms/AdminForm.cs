@@ -19,7 +19,7 @@ namespace WindowsFormsApp.Forms
         private TextBox txtBookTitle, txtBookAuthor, txtBookStock, txtBookId;
         private TextBox txtEmployeeName, txtEmployeePhone, txtEmployeeId;
         private DateTimePicker dtpBookDate, dtpEmployeeBirthday;
-        private ComboBox cmbEmployeeGender;
+        private ComboBox cmbEmployeeGender, cmbEmployeeRole;
         private Button btnAddBook, btnUpdateBook, btnDeleteBook, btnClearBook;
         private Button btnAddEmployee, btnUpdateEmployee, btnDeleteEmployee, btnClearEmployee;
         private Button btnDeleteSale, btnLogout;
@@ -357,6 +357,7 @@ namespace WindowsFormsApp.Forms
             var lblEmpGender = new Label { Text = "Gender", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 50), AutoSize = true };
             var lblEmpPhone = new Label { Text = "Phone", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(470, 50), AutoSize = true };
             var lblEmpBirthday = new Label { Text = "Birthday", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(630, 50), AutoSize = true };
+            var lblEmpRole = new Label { Text = "Role", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(860, 50), AutoSize = true };
             
             txtEmployeeId = new TextBox 
             { 
@@ -403,6 +404,16 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 12F),
                 Format = DateTimePickerFormat.Long
             };
+            cmbEmployeeRole = new ComboBox 
+            { 
+                Location = new Point(860, 75), 
+                Size = new Size(120, 35),
+                Font = new Font("Segoe UI", 12F),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                FlatStyle = FlatStyle.Flat
+            };
+            cmbEmployeeRole.Items.AddRange(new[] { "Admin", "Cashier" });
+            cmbEmployeeRole.SelectedIndex = 1; // Default to Cashier
             
             btnAddEmployee = new Button 
             { 
@@ -489,6 +500,7 @@ namespace WindowsFormsApp.Forms
                 lblEmpGender, cmbEmployeeGender,
                 lblEmpPhone, txtEmployeePhone,
                 lblEmpBirthday, dtpEmployeeBirthday,
+                lblEmpRole, cmbEmployeeRole,
                 btnAddEmployee, btnUpdateEmployee, btnDeleteEmployee, btnClearEmployee,
                 searchLabel,
                 txtSearchEmployees
@@ -697,6 +709,7 @@ namespace WindowsFormsApp.Forms
                         e.Name,
                         e.Gender,
                         e.PhoneNumber,
+                        e.Role,
                         Birthday = e.Birthday.ToShortDateString()
                     }).ToList();
                 }
@@ -748,13 +761,14 @@ namespace WindowsFormsApp.Forms
 
         private void LoadEmployeeToForm(DataGridViewRow row)
         {
-            if (row == null || row.Cells.Count < 5) return;
+            if (row == null || row.Cells.Count < 6) return;
 
             txtEmployeeId.Text = row.Cells[0].Value?.ToString() ?? "";
             txtEmployeeName.Text = row.Cells[1].Value?.ToString() ?? "";
             cmbEmployeeGender.Text = row.Cells[2].Value?.ToString() ?? "";
             txtEmployeePhone.Text = row.Cells[3].Value?.ToString() ?? "";
-            if (row.Cells[4].Value != null && DateTime.TryParse(row.Cells[4].Value.ToString(), out var date))
+            cmbEmployeeRole.Text = row.Cells[4].Value?.ToString() ?? "";
+            if (row.Cells[5].Value != null && DateTime.TryParse(row.Cells[5].Value.ToString(), out var date))
                 dtpEmployeeBirthday.Value = date;
         }
 
@@ -976,7 +990,7 @@ namespace WindowsFormsApp.Forms
 
         private void BtnAddEmployee_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtEmployeeName.Text) || string.IsNullOrWhiteSpace(cmbEmployeeGender.Text) || string.IsNullOrWhiteSpace(txtEmployeePhone.Text))
+            if (string.IsNullOrWhiteSpace(txtEmployeeName.Text) || string.IsNullOrWhiteSpace(cmbEmployeeGender.Text) || string.IsNullOrWhiteSpace(txtEmployeePhone.Text) || string.IsNullOrWhiteSpace(cmbEmployeeRole.Text))
             {
                 MessageBox.Show("Please fill all fields", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -1008,7 +1022,8 @@ namespace WindowsFormsApp.Forms
                     Name = txtEmployeeName.Text.Trim(),
                     Gender = cmbEmployeeGender.Text.Trim(),
                     PhoneNumber = txtEmployeePhone.Text.Trim(),
-                    Birthday = dtpEmployeeBirthday.Value.Date
+                    Birthday = dtpEmployeeBirthday.Value.Date,
+                    Role = cmbEmployeeRole.Text.Trim()
                 };
 
                 _employeeRepo.AddEmployee(employee);
@@ -1030,7 +1045,7 @@ namespace WindowsFormsApp.Forms
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(txtEmployeeName.Text) || string.IsNullOrWhiteSpace(cmbEmployeeGender.Text) || string.IsNullOrWhiteSpace(txtEmployeePhone.Text))
+            if (string.IsNullOrWhiteSpace(txtEmployeeName.Text) || string.IsNullOrWhiteSpace(cmbEmployeeGender.Text) || string.IsNullOrWhiteSpace(txtEmployeePhone.Text) || string.IsNullOrWhiteSpace(cmbEmployeeRole.Text))
             {
                 MessageBox.Show("Please fill all fields", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -1107,7 +1122,7 @@ namespace WindowsFormsApp.Forms
                         }
                         else
                         {
-                            MessageBox.Show("Employee not found or cannot be deleted (may have associated sales or users)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Employee not found or cannot be deleted (may have associated sales)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     catch (Exception ex)
@@ -1182,7 +1197,7 @@ namespace WindowsFormsApp.Forms
                         var failedMsg = failedIds.Count <= 5 
                             ? $"Failed to delete: {string.Join(", ", failedIds)}"
                             : $"Failed to delete {failedIds.Count} employee(s)";
-                        MessageBox.Show($"{deletedCount} employee(s) deleted successfully.\n{failedMsg}\n\nSome employees may have associated sales or users.", "Partial Success", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show($"{deletedCount} employee(s) deleted successfully.\n{failedMsg}\n\nSome employees may have associated sales.", "Partial Success", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 catch (Exception ex)
@@ -1288,6 +1303,7 @@ namespace WindowsFormsApp.Forms
             txtEmployeeName.Clear();
             cmbEmployeeGender.SelectedIndex = -1;
             txtEmployeePhone.Clear();
+            cmbEmployeeRole.SelectedIndex = 1; // Default to Cashier
             dtpEmployeeBirthday.Value = DateTime.Now.AddYears(-25).Date; // Default to 25 years ago
         }
 
@@ -1348,6 +1364,7 @@ namespace WindowsFormsApp.Forms
                     e.PhoneNumber.Contains(searchText) ||
                     e.EmployeeId.ToString().Contains(searchText) ||
                     e.Gender.ToLower().Contains(searchText) ||
+                    e.Role.ToLower().Contains(searchText) ||
                     e.Birthday.ToShortDateString().ToLower().Contains(searchText)
                 ).ToList();
 
@@ -1359,6 +1376,7 @@ namespace WindowsFormsApp.Forms
                         e.Name,
                         e.Gender,
                         e.PhoneNumber,
+                        e.Role,
                         Birthday = e.Birthday.ToShortDateString()
                     }).ToList();
                 }

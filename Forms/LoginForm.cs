@@ -217,6 +217,13 @@ namespace WindowsFormsApp.Forms
                 
                 if (employee != null && employee.Name.Equals(txtFullName.Text.Trim(), StringComparison.OrdinalIgnoreCase))
                 {
+                    // Check if employee role matches the selected login role
+                    if (employee.Role != _role)
+                    {
+                        MessageBox.Show($"Access denied. This employee has '{employee.Role}' role, but you are trying to login as '{_role}'.", "Role Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    
                     var roleEnum = _role == "Admin" ? UserRole.Admin : UserRole.Cashier;
                     var user = UserFactory.CreateUser(roleEnum, employee.EmployeeId, employee.Name);
                     

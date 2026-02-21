@@ -11,22 +11,6 @@
 DROP TABLE IF EXISTS sales CASCADE;
 DROP TABLE IF EXISTS books CASCADE;
 DROP TABLE IF EXISTS employees CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-
--- =====================================================
--- Table: users
--- Purpose: User authentication and login credentials
--- =====================================================
-CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(20) NOT NULL CHECK (role IN ('Admin', 'Cashier')),
-    employee_id INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_login TIMESTAMP,
-    is_active BOOLEAN DEFAULT TRUE
-);
 
 -- =====================================================
 -- Table: employees
@@ -38,6 +22,7 @@ CREATE TABLE employees (
     gender VARCHAR(6) NOT NULL CHECK (gender IN ('Male', 'Female')),
     phone_number VARCHAR(15) NOT NULL UNIQUE,
     birthday DATE NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'Cashier' CHECK (role IN ('Admin', 'Cashier')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -83,15 +68,6 @@ CREATE TABLE sales (
 );
 
 -- =====================================================
--- Foreign Key: users -> employees
--- =====================================================
-ALTER TABLE users 
-ADD CONSTRAINT fk_users_employee 
-FOREIGN KEY (employee_id) 
-REFERENCES employees(employee_id) 
-ON DELETE SET NULL;
-
--- =====================================================
 -- Indexes for Performance
 -- =====================================================
 CREATE INDEX idx_books_title ON books(title);
@@ -100,7 +76,6 @@ CREATE INDEX idx_employees_phone ON employees(phone_number);
 CREATE INDEX idx_sales_date ON sales(sale_date);
 CREATE INDEX idx_sales_employee ON sales(employee_id);
 CREATE INDEX idx_sales_book ON sales(book_id);
-CREATE INDEX idx_users_username ON users(username);
 
 -- =====================================================
 -- Sample Data Insertion
@@ -119,13 +94,6 @@ INSERT INTO books (title, author_name, stock, adding_date) VALUES
 ('What You Think of Me is None of My Business', 'Terry Cole-Whittaker', 5, '2024-12-24'),
 ('The 7 Habits of Highly Effective People', 'Stephen R. Covey', 10, '2024-01-10'),
 ('Atomic Habits', 'James Clear', 8, '2024-02-20');
-
--- Insert Sample Users (password_hash is placeholder - use proper hashing in production)
--- Default passwords: Admin123! and Cashier123!
-INSERT INTO users (username, password_hash, role, employee_id) VALUES
-('admin', '$2a$10$placeholder_hash_for_admin', 'Admin', 1),
-('cashier1', '$2a$10$placeholder_hash_for_cashier', 'Cashier', 2),
-('cashier2', '$2a$10$placeholder_hash_for_cashier2', 'Cashier', 3);
 
 -- Insert Sample Sales
 INSERT INTO sales (customer_name, book_id, employee_id, price, quantity, discount, sale_date) VALUES
@@ -206,7 +174,6 @@ $$ LANGUAGE plpgsql;
 -- =====================================================
 -- Comments on Tables
 -- =====================================================
-COMMENT ON TABLE users IS 'User accounts for login authentication';
 COMMENT ON TABLE employees IS 'Employee records and personal information';
 COMMENT ON TABLE books IS 'Book inventory and catalog';
 COMMENT ON TABLE sales IS 'Sales transactions and records';

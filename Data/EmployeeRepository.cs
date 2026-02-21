@@ -17,7 +17,7 @@ namespace WindowsFormsApp.Data
             using var conn = DbConnectionManager.Instance.CreateConnection();
             conn.Open();
             
-            using var cmd = new NpgsqlCommand("SELECT employee_id, name, gender, phone_number, birthday FROM employees ORDER BY employee_id", conn);
+            using var cmd = new NpgsqlCommand("SELECT employee_id, name, gender, phone_number, birthday, role FROM employees ORDER BY employee_id", conn);
             using var reader = cmd.ExecuteReader();
             
             while (reader.Read())
@@ -28,7 +28,8 @@ namespace WindowsFormsApp.Data
                     Name = reader.GetString(1),
                     Gender = reader.GetString(2),
                     PhoneNumber = reader.GetString(3),
-                    Birthday = reader.GetDateTime(4)
+                    Birthday = reader.GetDateTime(4),
+                    Role = reader.GetString(5)
                 });
             }
             
@@ -40,7 +41,7 @@ namespace WindowsFormsApp.Data
             using var conn = DbConnectionManager.Instance.CreateConnection();
             conn.Open();
             
-            using var cmd = new NpgsqlCommand("SELECT employee_id, name, gender, phone_number, birthday FROM employees WHERE employee_id = @id", conn);
+            using var cmd = new NpgsqlCommand("SELECT employee_id, name, gender, phone_number, birthday, role FROM employees WHERE employee_id = @id", conn);
             cmd.Parameters.AddWithValue("id", employeeId);
             using var reader = cmd.ExecuteReader();
             
@@ -52,7 +53,8 @@ namespace WindowsFormsApp.Data
                     Name = reader.GetString(1),
                     Gender = reader.GetString(2),
                     PhoneNumber = reader.GetString(3),
-                    Birthday = reader.GetDateTime(4)
+                    Birthday = reader.GetDateTime(4),
+                    Role = reader.GetString(5)
                 };
             }
             
@@ -64,7 +66,7 @@ namespace WindowsFormsApp.Data
             using var conn = DbConnectionManager.Instance.CreateConnection();
             conn.Open();
             
-            using var cmd = new NpgsqlCommand("SELECT employee_id, name, gender, phone_number, birthday FROM employees WHERE phone_number = @phone", conn);
+            using var cmd = new NpgsqlCommand("SELECT employee_id, name, gender, phone_number, birthday, role FROM employees WHERE phone_number = @phone", conn);
             cmd.Parameters.AddWithValue("phone", phoneNumber);
             using var reader = cmd.ExecuteReader();
             
@@ -76,7 +78,8 @@ namespace WindowsFormsApp.Data
                     Name = reader.GetString(1),
                     Gender = reader.GetString(2),
                     PhoneNumber = reader.GetString(3),
-                    Birthday = reader.GetDateTime(4)
+                    Birthday = reader.GetDateTime(4),
+                    Role = reader.GetString(5)
                 };
             }
             
@@ -89,6 +92,8 @@ namespace WindowsFormsApp.Data
             if (string.IsNullOrWhiteSpace(employee.Name)) throw new ArgumentException("Employee name cannot be empty", nameof(employee));
             if (string.IsNullOrWhiteSpace(employee.Gender)) throw new ArgumentException("Gender cannot be empty", nameof(employee));
             if (string.IsNullOrWhiteSpace(employee.PhoneNumber)) throw new ArgumentException("Phone number cannot be empty", nameof(employee));
+            if (string.IsNullOrWhiteSpace(employee.Role)) throw new ArgumentException("Role cannot be empty", nameof(employee));
+            if (employee.Role != "Admin" && employee.Role != "Cashier") throw new ArgumentException("Role must be either 'Admin' or 'Cashier'", nameof(employee));
             if (employee.Birthday > DateTime.Now.Date) throw new ArgumentException("Birthday cannot be in the future", nameof(employee));
             if (employee.Birthday < DateTime.Now.AddYears(-100).Date) throw new ArgumentException("Birthday cannot be more than 100 years in the past", nameof(employee));
             // Check minimum working age (16 years)
@@ -107,12 +112,13 @@ namespace WindowsFormsApp.Data
             }
             
             using var cmd = new NpgsqlCommand(
-                "INSERT INTO employees (name, gender, phone_number, birthday) VALUES (@name, @gender, @phone, @birthday) RETURNING employee_id",
+                "INSERT INTO employees (name, gender, phone_number, birthday, role) VALUES (@name, @gender, @phone, @birthday, @role) RETURNING employee_id",
                 conn);
             cmd.Parameters.AddWithValue("name", employee.Name);
             cmd.Parameters.AddWithValue("gender", employee.Gender);
             cmd.Parameters.AddWithValue("phone", employee.PhoneNumber);
             cmd.Parameters.AddWithValue("birthday", employee.Birthday);
+            cmd.Parameters.AddWithValue("role", employee.Role);
             
             var result = cmd.ExecuteScalar();
             if (result == null || result == DBNull.Value)
@@ -127,6 +133,8 @@ namespace WindowsFormsApp.Data
             if (string.IsNullOrWhiteSpace(employee.Name)) throw new ArgumentException("Employee name cannot be empty", nameof(employee));
             if (string.IsNullOrWhiteSpace(employee.Gender)) throw new ArgumentException("Gender cannot be empty", nameof(employee));
             if (string.IsNullOrWhiteSpace(employee.PhoneNumber)) throw new ArgumentException("Phone number cannot be empty", nameof(employee));
+            if (string.IsNullOrWhiteSpace(employee.Role)) throw new ArgumentException("Role cannot be empty", nameof(employee));
+            if (employee.Role != "Admin" && employee.Role != "Cashier") throw new ArgumentException("Role must be either 'Admin' or 'Cashier'", nameof(employee));
             if (employee.Birthday > DateTime.Now.Date) throw new ArgumentException("Birthday cannot be in the future", nameof(employee));
             if (employee.Birthday < DateTime.Now.AddYears(-100).Date) throw new ArgumentException("Birthday cannot be more than 100 years in the past", nameof(employee));
             if (employee.EmployeeId <= 0) throw new ArgumentException("Invalid employee ID", nameof(employee));
@@ -147,13 +155,14 @@ namespace WindowsFormsApp.Data
             }
             
             using var cmd = new NpgsqlCommand(
-                "UPDATE employees SET name = @name, gender = @gender, phone_number = @phone, birthday = @birthday WHERE employee_id = @id",
+                "UPDATE employees SET name = @name, gender = @gender, phone_number = @phone, birthday = @birthday, role = @role WHERE employee_id = @id",
                 conn);
             cmd.Parameters.AddWithValue("id", employee.EmployeeId);
             cmd.Parameters.AddWithValue("name", employee.Name);
             cmd.Parameters.AddWithValue("gender", employee.Gender);
             cmd.Parameters.AddWithValue("phone", employee.PhoneNumber);
             cmd.Parameters.AddWithValue("birthday", employee.Birthday);
+            cmd.Parameters.AddWithValue("role", employee.Role);
             
             return cmd.ExecuteNonQuery() > 0;
         }

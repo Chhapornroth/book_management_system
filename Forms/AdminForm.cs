@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -278,6 +279,7 @@ namespace WindowsFormsApp.Forms
                 Dock = DockStyle.Fill,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                MultiSelect = true,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -472,6 +474,7 @@ namespace WindowsFormsApp.Forms
                 Dock = DockStyle.Fill,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                MultiSelect = true,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -538,7 +541,7 @@ namespace WindowsFormsApp.Forms
             { 
                 Text = "🗑️ Delete Selected", 
                 Location = new Point(15, 50), 
-                Size = new Size(140, 40),
+                Size = new Size(160, 40),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
@@ -578,6 +581,7 @@ namespace WindowsFormsApp.Forms
                 Dock = DockStyle.Fill,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                MultiSelect = true,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -837,30 +841,110 @@ namespace WindowsFormsApp.Forms
 
         private void BtnDeleteBook_Click(object sender, EventArgs e)
         {
-            if (!int.TryParse(txtBookId.Text, out var id) || id <= 0)
+            // Check if rows are selected in DataGridView
+            if (dgvBooks.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Please select a book to delete", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // Fallback to form field if no rows selected
+                if (!int.TryParse(txtBookId.Text, out var id) || id <= 0)
+                {
+                    MessageBox.Show("Please select one or more books to delete", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                // Single delete from form field
+                if (MessageBox.Show($"Delete book ID {id}? This action cannot be undone.", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        if (_bookRepo.DeleteBook(id))
+                        {
+                            LoadBooks();
+                            ClearBookForm();
+                            MessageBox.Show("Book deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Book not found or cannot be deleted (may have associated sales)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error deleting book: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
                 return;
             }
 
-            if (MessageBox.Show($"Delete book ID {id}? This action cannot be undone.", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            // Multi-select deletion
+            var selectedRows = dgvBooks.SelectedRows;
+            var bookIds = new List<int>();
+            
+            foreach (DataGridViewRow row in selectedRows)
+            {
+                if (row.Cells[0].Value != null && int.TryParse(row.Cells[0].Value.ToString(), out var bookId))
+                {
+                    bookIds.Add(bookId);
+                }
+            }
+
+            if (bookIds.Count == 0)
+            {
+                MessageBox.Show("No valid books selected", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var message = bookIds.Count == 1 
+                ? $"Delete book ID {bookIds[0]}? This action cannot be undone."
+                : $"Delete {bookIds.Count} selected books? This action cannot be undone.";
+
+            if (MessageBox.Show(message, "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
-                    if (_bookRepo.DeleteBook(id))
+                    var deletedCount = 0;
+                    var failedCount = 0;
+                    var failedIds = new List<int>();
+
+                    foreach (var bookId in bookIds)
                     {
-                        LoadBooks();
-                        ClearBookForm();
-                        MessageBox.Show("Book deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        try
+                        {
+                            if (_bookRepo.DeleteBook(bookId))
+                            {
+                                deletedCount++;
+                            }
+                            else
+                            {
+                                failedCount++;
+                                failedIds.Add(bookId);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            failedCount++;
+                            failedIds.Add(bookId);
+                            System.Diagnostics.Debug.WriteLine($"Error deleting book {bookId}: {ex.Message}");
+                        }
+                    }
+
+                    LoadBooks();
+                    ClearBookForm();
+
+                    if (failedCount == 0)
+                    {
+                        MessageBox.Show($"{deletedCount} book(s) deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show("Book not found or cannot be deleted (may have associated sales)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        var failedMsg = failedIds.Count <= 5 
+                            ? $"Failed to delete: {string.Join(", ", failedIds)}"
+                            : $"Failed to delete {failedIds.Count} book(s)";
+                        MessageBox.Show($"{deletedCount} book(s) deleted successfully.\n{failedMsg}\n\nSome books may have associated sales.", "Partial Success", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error deleting book: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error deleting books: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -975,30 +1059,110 @@ namespace WindowsFormsApp.Forms
 
         private void BtnDeleteEmployee_Click(object sender, EventArgs e)
         {
-            if (!int.TryParse(txtEmployeeId.Text, out var id) || id <= 0)
+            // Check if rows are selected in DataGridView
+            if (dgvEmployees.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Please select an employee to delete", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // Fallback to form field if no rows selected
+                if (!int.TryParse(txtEmployeeId.Text, out var id) || id <= 0)
+                {
+                    MessageBox.Show("Please select one or more employees to delete", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                // Single delete from form field
+                if (MessageBox.Show($"Delete employee ID {id}? This action cannot be undone.", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        if (_employeeRepo.DeleteEmployee(id))
+                        {
+                            LoadEmployees();
+                            ClearEmployeeForm();
+                            MessageBox.Show("Employee deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Employee not found or cannot be deleted (may have associated sales or users)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error deleting employee: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
                 return;
             }
 
-            if (MessageBox.Show($"Delete employee ID {id}? This action cannot be undone.", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            // Multi-select deletion
+            var selectedRows = dgvEmployees.SelectedRows;
+            var employeeIds = new List<int>();
+            
+            foreach (DataGridViewRow row in selectedRows)
+            {
+                if (row.Cells[0].Value != null && int.TryParse(row.Cells[0].Value.ToString(), out var employeeId))
+                {
+                    employeeIds.Add(employeeId);
+                }
+            }
+
+            if (employeeIds.Count == 0)
+            {
+                MessageBox.Show("No valid employees selected", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var message = employeeIds.Count == 1 
+                ? $"Delete employee ID {employeeIds[0]}? This action cannot be undone."
+                : $"Delete {employeeIds.Count} selected employees? This action cannot be undone.";
+
+            if (MessageBox.Show(message, "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
-                    if (_employeeRepo.DeleteEmployee(id))
+                    var deletedCount = 0;
+                    var failedCount = 0;
+                    var failedIds = new List<int>();
+
+                    foreach (var employeeId in employeeIds)
                     {
-                        LoadEmployees();
-                        ClearEmployeeForm();
-                        MessageBox.Show("Employee deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        try
+                        {
+                            if (_employeeRepo.DeleteEmployee(employeeId))
+                            {
+                                deletedCount++;
+                            }
+                            else
+                            {
+                                failedCount++;
+                                failedIds.Add(employeeId);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            failedCount++;
+                            failedIds.Add(employeeId);
+                            System.Diagnostics.Debug.WriteLine($"Error deleting employee {employeeId}: {ex.Message}");
+                        }
+                    }
+
+                    LoadEmployees();
+                    ClearEmployeeForm();
+
+                    if (failedCount == 0)
+                    {
+                        MessageBox.Show($"{deletedCount} employee(s) deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show("Employee not found or cannot be deleted (may have associated sales or users)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        var failedMsg = failedIds.Count <= 5 
+                            ? $"Failed to delete: {string.Join(", ", failedIds)}"
+                            : $"Failed to delete {failedIds.Count} employee(s)";
+                        MessageBox.Show($"{deletedCount} employee(s) deleted successfully.\n{failedMsg}\n\nSome employees may have associated sales or users.", "Partial Success", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error deleting employee: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error deleting employees: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1007,34 +1171,79 @@ namespace WindowsFormsApp.Forms
         {
             if (dgvSales.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Please select a sale to delete", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select one or more sales to delete", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var firstCell = dgvSales.SelectedRows[0].Cells[0]?.Value;
-            if (firstCell == null || !int.TryParse(firstCell.ToString(), out var saleId))
+            // Multi-select deletion
+            var selectedRows = dgvSales.SelectedRows;
+            var saleIds = new List<int>();
+            
+            foreach (DataGridViewRow row in selectedRows)
             {
-                MessageBox.Show("Invalid sale selection", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (row.Cells[0].Value != null && int.TryParse(row.Cells[0].Value.ToString(), out var saleId))
+                {
+                    saleIds.Add(saleId);
+                }
+            }
+
+            if (saleIds.Count == 0)
+            {
+                MessageBox.Show("No valid sales selected", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (MessageBox.Show($"Delete sale ID {saleId}? This action cannot be undone.", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            var message = saleIds.Count == 1 
+                ? $"Delete sale ID {saleIds[0]}? This action cannot be undone."
+                : $"Delete {saleIds.Count} selected sales? This action cannot be undone.";
+
+            if (MessageBox.Show(message, "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
-                    if (_saleRepo.DeleteSale(saleId))
+                    var deletedCount = 0;
+                    var failedCount = 0;
+                    var failedIds = new List<int>();
+
+                    foreach (var saleId in saleIds)
                     {
-                        LoadSales();
-                        MessageBox.Show("Sale deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        try
+                        {
+                            if (_saleRepo.DeleteSale(saleId))
+                            {
+                                deletedCount++;
+                            }
+                            else
+                            {
+                                failedCount++;
+                                failedIds.Add(saleId);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            failedCount++;
+                            failedIds.Add(saleId);
+                            System.Diagnostics.Debug.WriteLine($"Error deleting sale {saleId}: {ex.Message}");
+                        }
+                    }
+
+                    LoadSales();
+
+                    if (failedCount == 0)
+                    {
+                        MessageBox.Show($"{deletedCount} sale(s) deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show("Sale not found or delete failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        var failedMsg = failedIds.Count <= 5 
+                            ? $"Failed to delete: {string.Join(", ", failedIds)}"
+                            : $"Failed to delete {failedIds.Count} sale(s)";
+                        MessageBox.Show($"{deletedCount} sale(s) deleted successfully.\n{failedMsg}", "Partial Success", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error deleting sale: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error deleting sales: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

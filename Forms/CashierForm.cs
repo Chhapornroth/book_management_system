@@ -116,7 +116,7 @@ namespace WindowsFormsApp.Forms
             // Input Panel
             var inputPanel = new Panel 
             { 
-                Height = 240, 
+                Height = 260, 
                 Dock = DockStyle.Top, 
                 BackColor = Color.White,
                 Padding = new Padding(15)
@@ -188,11 +188,11 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(445, 45)
+                Location = new Point(555, 45)
             };
             txtQuantity = new TextBox 
             { 
-                Location = new Point(445, 65), 
+                Location = new Point(555, 65), 
                 Size = new Size(100, 32), 
                 PlaceholderText = "1",
                 Font = new Font("Segoe UI", 10F),
@@ -316,8 +316,7 @@ namespace WindowsFormsApp.Forms
                 totalLabel, lblTotal
             });
             
-            // Adjust input panel height to fit all controls
-            inputPanel.Height = 250;
+            // Panel height is already set above
 
             // Cart DataGridView
             dgvCart = new DataGridView

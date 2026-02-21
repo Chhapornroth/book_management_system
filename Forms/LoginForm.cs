@@ -61,7 +61,8 @@ namespace WindowsFormsApp.Forms
             btnBack.Click += (s, e) => 
             { 
                 var dashboard = new DashboardForm();
-                dashboard.Show();
+                this.Hide();
+                dashboard.ShowDialog();
                 this.Close();
             };
 
@@ -99,18 +100,18 @@ namespace WindowsFormsApp.Forms
 
             var lblFullName = new Label
             {
-                Text = "Full Name",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Text = "Full Name:",
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(centerX, 30)
+                Location = new Point(centerX, 20)
             };
 
             txtFullName = new TextBox
             {
                 PlaceholderText = "Enter your full name",
                 Size = new Size(inputWidth, 38),
-                Location = new Point(centerX, 58),
+                Location = new Point(centerX, 48),
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
@@ -120,18 +121,18 @@ namespace WindowsFormsApp.Forms
 
             var lblPhone = new Label
             {
-                Text = "Phone Number",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Text = "Phone Number:",
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(centerX, 110)
+                Location = new Point(centerX, 100)
             };
 
             txtPassword = new TextBox
             {
                 PlaceholderText = "Enter your phone number",
                 Size = new Size(inputWidth, 38),
-                Location = new Point(centerX, 138),
+                Location = new Point(centerX, 128),
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
@@ -144,7 +145,7 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "Sign In",
                 Size = new Size(inputWidth, 48),
-                Location = new Point(centerX, 200),
+                Location = new Point(centerX, 190),
                 Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                 BackColor = _role == "Admin" ? Color.FromArgb(52, 152, 219) : Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
@@ -205,14 +206,22 @@ namespace WindowsFormsApp.Forms
                     {
                         var adminForm = new AdminForm(user);
                         adminForm.ShowDialog();
+                        // When child form closes, close login and show dashboard
+                        var dashboard = new DashboardForm();
+                        this.Close();
+                        dashboard.ShowDialog();
+                        return;
                     }
                     else
                     {
                         var cashierForm = new CashierForm(user);
                         cashierForm.ShowDialog();
+                        // When child form closes, close login and show dashboard
+                        var dashboard = new DashboardForm();
+                        this.Close();
+                        dashboard.ShowDialog();
+                        return;
                     }
-                    
-                    this.Close();
                 }
                 else
                 {

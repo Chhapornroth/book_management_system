@@ -60,33 +60,11 @@ namespace WindowsFormsApp.Forms
                 Location = new Point(20, 20)
             };
 
-            var btnBack = new Button
-            {
-                Text = "⬅️ Back",
-                Size = new Size(100, 40),
-                Location = new Point(1020, 15),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                BackColor = Color.FromArgb(149, 165, 166),
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnBack.FlatAppearance.BorderSize = 0;
-            btnBack.FlatAppearance.MouseOverBackColor = Color.FromArgb(127, 140, 141);
-            btnBack.Click += (s, e) => 
-            { 
-                this.Hide(); 
-                var loginForm = new LoginForm("Admin");
-                loginForm.ShowDialog();
-                this.Close();
-            };
-
             btnLogout = new Button
             {
                 Text = "🚪 Logout",
                 Size = new Size(120, 40),
-                Location = new Point(1140, 15),
+                Location = new Point(this.Width - 140, 15),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
@@ -96,16 +74,9 @@ namespace WindowsFormsApp.Forms
             };
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
-            btnLogout.Click += (s, e) => 
-            { 
-                this.Hide(); 
-                var dashboardForm = new DashboardForm();
-                dashboardForm.ShowDialog();
-                this.Close();
-            };
+            btnLogout.Click += (s, e) => { this.Close(); new DashboardForm().Show(); };
 
             headerPanel.Controls.Add(welcomeLabel);
-            headerPanel.Controls.Add(btnBack);
             headerPanel.Controls.Add(btnLogout);
 
             // Tab Control with modern styling
@@ -287,7 +258,7 @@ namespace WindowsFormsApp.Forms
             dgvBooks = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
@@ -359,15 +330,15 @@ namespace WindowsFormsApp.Forms
             txtEmployeeName = new TextBox 
             { 
                 Location = new Point(110, 45), 
-                Size = new Size(200, 32), 
+                Size = new Size(220, 32), 
                 PlaceholderText = "Full Name",
                 Font = new Font("Segoe UI", 10F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             cmbEmployeeGender = new ComboBox 
             { 
-                Location = new Point(320, 45), 
-                Size = new Size(100, 32),
+                Location = new Point(340, 45), 
+                Size = new Size(120, 32),
                 Font = new Font("Segoe UI", 10F),
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 FlatStyle = FlatStyle.Flat
@@ -375,15 +346,15 @@ namespace WindowsFormsApp.Forms
             cmbEmployeeGender.Items.AddRange(new[] { "Male", "Female" });
             txtEmployeePhone = new TextBox 
             { 
-                Location = new Point(430, 45), 
-                Size = new Size(140, 32), 
+                Location = new Point(470, 45), 
+                Size = new Size(150, 32), 
                 PlaceholderText = "Phone Number",
                 Font = new Font("Segoe UI", 10F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             dtpEmployeeBirthday = new DateTimePicker 
             { 
-                Location = new Point(580, 45), 
+                Location = new Point(630, 45), 
                 Size = new Size(150, 32),
                 Value = DateTime.Now.AddYears(-25).Date,
                 MaxDate = DateTime.Now.Date,
@@ -456,9 +427,9 @@ namespace WindowsFormsApp.Forms
             
             var lblEmpId = new Label { Text = "ID", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(15, 25), AutoSize = true };
             var lblEmpName = new Label { Text = "Name", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(110, 25), AutoSize = true };
-            var lblEmpGender = new Label { Text = "Gender", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(320, 25), AutoSize = true };
-            var lblEmpPhone = new Label { Text = "Phone", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(430, 25), AutoSize = true };
-            var lblEmpBirthday = new Label { Text = "Birthday", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(580, 25), AutoSize = true };
+            var lblEmpGender = new Label { Text = "Gender", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 25), AutoSize = true };
+            var lblEmpPhone = new Label { Text = "Phone", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(470, 25), AutoSize = true };
+            var lblEmpBirthday = new Label { Text = "Birthday", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(630, 25), AutoSize = true };
 
             inputPanel.Controls.AddRange(new Control[] {
                 inputTitle,
@@ -475,7 +446,7 @@ namespace WindowsFormsApp.Forms
             dgvEmployees = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
@@ -576,7 +547,7 @@ namespace WindowsFormsApp.Forms
             dgvSales = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
@@ -622,8 +593,6 @@ namespace WindowsFormsApp.Forms
 
         private void LoadBooks()
         {
-            if (dgvBooks == null) return;
-            
             var books = _bookRepo.GetAllBooks();
             dgvBooks.DataSource = books.Select(b => new
             {
@@ -637,8 +606,6 @@ namespace WindowsFormsApp.Forms
 
         private void LoadEmployees()
         {
-            if (dgvEmployees == null) return;
-            
             var employees = _employeeRepo.GetAllEmployees();
             dgvEmployees.DataSource = employees.Select(e => new
             {
@@ -652,8 +619,6 @@ namespace WindowsFormsApp.Forms
 
         private void LoadSales()
         {
-            if (dgvSales == null) return;
-            
             var sales = _saleRepo.GetAllSales();
             dgvSales.DataSource = sales.Select(s => new
             {

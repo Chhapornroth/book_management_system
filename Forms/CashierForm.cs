@@ -63,33 +63,11 @@ namespace WindowsFormsApp.Forms
                 Location = new Point(20, 20)
             };
 
-            var btnBack = new Button
-            {
-                Text = "⬅️ Back",
-                Size = new Size(100, 40),
-                Location = new Point(820, 15),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                BackColor = Color.FromArgb(149, 165, 166),
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnBack.FlatAppearance.BorderSize = 0;
-            btnBack.FlatAppearance.MouseOverBackColor = Color.FromArgb(127, 140, 141);
-            btnBack.Click += (s, e) => 
-            { 
-                this.Hide(); 
-                var loginForm = new LoginForm("Cashier");
-                loginForm.ShowDialog();
-                this.Close();
-            };
-
             btnLogout = new Button
             {
                 Text = "🚪 Logout",
                 Size = new Size(120, 40),
-                Location = new Point(940, 15),
+                Location = new Point(this.Width - 140, 15),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
@@ -99,16 +77,9 @@ namespace WindowsFormsApp.Forms
             };
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
-            btnLogout.Click += (s, e) => 
-            { 
-                this.Hide(); 
-                var dashboardForm = new DashboardForm();
-                dashboardForm.ShowDialog();
-                this.Close();
-            };
+            btnLogout.Click += (s, e) => { this.Close(); new DashboardForm().Show(); };
 
             headerPanel.Controls.Add(welcomeLabel);
-            headerPanel.Controls.Add(btnBack);
             headerPanel.Controls.Add(btnLogout);
 
             tabControl = new TabControl 
@@ -145,7 +116,7 @@ namespace WindowsFormsApp.Forms
             // Input Panel
             var inputPanel = new Panel 
             { 
-                Height = 280, 
+                Height = 260, 
                 Dock = DockStyle.Top, 
                 BackColor = Color.White,
                 Padding = new Padding(15)
@@ -228,6 +199,49 @@ namespace WindowsFormsApp.Forms
                 BorderStyle = BorderStyle.FixedSingle
             };
 
+            var lblDiscount = new Label
+            {
+                Text = "Discount",
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(127, 140, 141),
+                AutoSize = true,
+                Location = new Point(445, 110)
+            };
+            chk5Percent = new CheckBox 
+            { 
+                Text = "5%", 
+                Location = new Point(445, 130), 
+                Size = new Size(60, 28),
+                Font = new Font("Segoe UI", 10F),
+                Appearance = Appearance.Button,
+                FlatStyle = FlatStyle.Flat
+            };
+            chk5Percent.FlatAppearance.CheckedBackColor = Color.FromArgb(52, 152, 219);
+            chk10Percent = new CheckBox 
+            { 
+                Text = "10%", 
+                Location = new Point(515, 130), 
+                Size = new Size(60, 28),
+                Font = new Font("Segoe UI", 10F),
+                Appearance = Appearance.Button,
+                FlatStyle = FlatStyle.Flat
+            };
+            chk10Percent.FlatAppearance.CheckedBackColor = Color.FromArgb(52, 152, 219);
+            chk20Percent = new CheckBox 
+            { 
+                Text = "20%", 
+                Location = new Point(585, 130), 
+                Size = new Size(60, 28),
+                Font = new Font("Segoe UI", 10F),
+                Appearance = Appearance.Button,
+                FlatStyle = FlatStyle.Flat
+            };
+            chk20Percent.FlatAppearance.CheckedBackColor = Color.FromArgb(52, 152, 219);
+
+            chk5Percent.CheckedChanged += (s, e) => { if (chk5Percent.Checked) { chk10Percent.Checked = false; chk20Percent.Checked = false; } };
+            chk10Percent.CheckedChanged += (s, e) => { if (chk10Percent.Checked) { chk5Percent.Checked = false; chk20Percent.Checked = false; } };
+            chk20Percent.CheckedChanged += (s, e) => { if (chk20Percent.Checked) { chk5Percent.Checked = false; chk10Percent.Checked = false; } };
+
             btnAddToCart = new Button 
             { 
                 Text = "➕ Add to Cart", 
@@ -273,63 +287,20 @@ namespace WindowsFormsApp.Forms
             btnClearCart.FlatAppearance.MouseOverBackColor = Color.FromArgb(243, 156, 18);
             btnClearCart.Click += BtnClearCart_Click;
 
-            var lblDiscount = new Label
-            {
-                Text = "Discount",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(127, 140, 141),
-                AutoSize = true,
-                Location = new Point(15, 150)
-            };
-            chk5Percent = new CheckBox 
-            { 
-                Text = "5%", 
-                Location = new Point(15, 170), 
-                Size = new Size(60, 28),
-                Font = new Font("Segoe UI", 10F),
-                Appearance = Appearance.Button,
-                FlatStyle = FlatStyle.Flat
-            };
-            chk5Percent.FlatAppearance.CheckedBackColor = Color.FromArgb(52, 152, 219);
-            chk10Percent = new CheckBox 
-            { 
-                Text = "10%", 
-                Location = new Point(85, 170), 
-                Size = new Size(60, 28),
-                Font = new Font("Segoe UI", 10F),
-                Appearance = Appearance.Button,
-                FlatStyle = FlatStyle.Flat
-            };
-            chk10Percent.FlatAppearance.CheckedBackColor = Color.FromArgb(52, 152, 219);
-            chk20Percent = new CheckBox 
-            { 
-                Text = "20%", 
-                Location = new Point(155, 170), 
-                Size = new Size(60, 28),
-                Font = new Font("Segoe UI", 10F),
-                Appearance = Appearance.Button,
-                FlatStyle = FlatStyle.Flat
-            };
-            chk20Percent.FlatAppearance.CheckedBackColor = Color.FromArgb(52, 152, 219);
-
-            chk5Percent.CheckedChanged += (s, e) => { if (chk5Percent.Checked) { chk10Percent.Checked = false; chk20Percent.Checked = false; } };
-            chk10Percent.CheckedChanged += (s, e) => { if (chk10Percent.Checked) { chk5Percent.Checked = false; chk20Percent.Checked = false; } };
-            chk20Percent.CheckedChanged += (s, e) => { if (chk20Percent.Checked) { chk5Percent.Checked = false; chk10Percent.Checked = false; } };
-
             var totalLabel = new Label
             {
                 Text = "Total Amount:",
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(15, 220)
+                Location = new Point(15, 180)
             };
 
             lblTotal = new Label
             {
                 Text = "$0.00",
                 Font = new Font("Segoe UI", 24F, FontStyle.Bold),
-                Location = new Point(150, 215),
+                Location = new Point(150, 175),
                 Size = new Size(300, 35),
                 ForeColor = Color.FromArgb(46, 204, 113)
             };
@@ -351,7 +322,7 @@ namespace WindowsFormsApp.Forms
             dgvCart = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -400,7 +371,7 @@ namespace WindowsFormsApp.Forms
             dgvBooks = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -442,7 +413,7 @@ namespace WindowsFormsApp.Forms
             dgvSales = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -502,8 +473,6 @@ namespace WindowsFormsApp.Forms
 
         private void LoadSales()
         {
-            if (dgvSales == null) return;
-            
             var sales = _saleRepo.GetAllSales().Where(s => s.EmployeeId == _currentUser.Id).ToList();
             dgvSales.DataSource = sales.Select(s => new
             {
@@ -606,8 +575,6 @@ namespace WindowsFormsApp.Forms
 
         private void UpdateCartDisplay()
         {
-            if (dgvCart == null) return;
-            
             dgvCart.Rows.Clear();
             _currentTotal = 0;
 
@@ -619,10 +586,7 @@ namespace WindowsFormsApp.Forms
                     (item.Discount * 100).ToString("F0") + "%", subtotal.ToString("C"));
             }
 
-            if (lblTotal != null)
-            {
-                lblTotal.Text = $"{_currentTotal:C}";
-            }
+            lblTotal.Text = $"{_currentTotal:C}";
         }
 
         private void BtnProcessSale_Click(object sender, EventArgs e)

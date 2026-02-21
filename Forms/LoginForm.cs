@@ -63,30 +63,8 @@ namespace WindowsFormsApp.Forms
                 Location = new Point(20, 75)
             };
 
-            var btnBack = new Button
-            {
-                Text = "⬅️ Back",
-                Size = new Size(100, 40),
-                Location = new Point(20, 100),
-                BackColor = Color.FromArgb(149, 165, 166),
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnBack.FlatAppearance.BorderSize = 0;
-            btnBack.FlatAppearance.MouseOverBackColor = Color.FromArgb(127, 140, 141);
-            btnBack.Click += (s, e) => 
-            { 
-                this.Hide(); 
-                var dashboardForm = new DashboardForm();
-                dashboardForm.ShowDialog();
-                this.Close();
-            };
-
             headerPanel.Controls.Add(lblWelcome);
             headerPanel.Controls.Add(lblInstruction);
-            headerPanel.Controls.Add(btnBack);
 
             // Content Panel
             var contentPanel = new Panel

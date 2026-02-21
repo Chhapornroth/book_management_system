@@ -2,69 +2,62 @@
 -- PostgreSQL Database Schema for BookStore Management System
 -- =====================================================
 -- Database: bookstore_db
--- 
 -- Connection String Template:
 -- Host=localhost;Port=5432;Database=bookstore_db;Username=postgres;Password=your_password;
 -- =====================================================
 
--- Drop existing tables if they exist (in reverse order due to foreign keys)
+-- Drop existing tables if they exist (reverse order due to FK)
 DROP TABLE IF EXISTS sales CASCADE;
 DROP TABLE IF EXISTS books CASCADE;
 DROP TABLE IF EXISTS employees CASCADE;
 
 -- =====================================================
 -- Table: employees
--- Purpose: Employee records and information
 -- =====================================================
 CREATE TABLE employees (
-    employee_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    gender VARCHAR(6) NOT NULL CHECK (gender IN ('Male', 'Female')),
-    phone_number VARCHAR(15) NOT NULL UNIQUE,
-    birthday DATE NOT NULL,
-    role VARCHAR(20) NOT NULL DEFAULT 'Cashier' CHECK (role IN ('Admin', 'Cashier')),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                           employee_id SERIAL PRIMARY KEY,
+                           name VARCHAR(255) NOT NULL,
+                           gender VARCHAR(6) NOT NULL CHECK (gender IN ('Male', 'Female')),
+                           phone_number VARCHAR(15) NOT NULL UNIQUE,
+                           birthday DATE NOT NULL,
+                           role VARCHAR(20) NOT NULL DEFAULT 'Cashier' CHECK (role IN ('Admin', 'Cashier')),
+                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- =====================================================
 -- Table: books
--- Purpose: Book inventory and records
 -- =====================================================
 CREATE TABLE books (
-    book_id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    author_name VARCHAR(255) NOT NULL,
-    stock INTEGER NOT NULL CHECK (stock >= 0),
-    adding_date DATE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                       book_id SERIAL PRIMARY KEY,
+                       title VARCHAR(255) NOT NULL,
+                       author_name VARCHAR(255) NOT NULL,
+                       stock INTEGER NOT NULL CHECK (stock >= 0),
+                       adding_date DATE NOT NULL,
+                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- =====================================================
 -- Table: sales
--- Purpose: Transaction records for book sales
 -- =====================================================
 CREATE TABLE sales (
-    sale_id SERIAL PRIMARY KEY,
-    customer_name VARCHAR(255) NOT NULL,
-    book_id INTEGER NOT NULL,
-    employee_id INTEGER NOT NULL,
-    price NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
-    quantity INTEGER NOT NULL CHECK (quantity > 0),
-    discount NUMERIC(5, 4) NOT NULL DEFAULT 0 CHECK (discount >= 0 AND discount <= 1),
-    total NUMERIC(10, 2) GENERATED ALWAYS AS (
-        CASE 
-            WHEN discount <= 0 THEN (price * quantity)
-            ELSE (price * quantity) - ((price * quantity) * discount)
-        END
-    ) STORED,
-    sale_date DATE NOT NULL DEFAULT CURRENT_DATE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+                       sale_id SERIAL PRIMARY KEY,
+                       customer_name VARCHAR(255) NOT NULL,
+                       book_id INTEGER NOT NULL,
+                       employee_id INTEGER NOT NULL,
+                       price NUMERIC(10,2) NOT NULL CHECK (price >= 0),
+                       quantity INTEGER NOT NULL CHECK (quantity > 0),
+                       discount NUMERIC(5,4) NOT NULL DEFAULT 0 CHECK (discount >= 0 AND discount <= 1),
+                       total NUMERIC(10,2) GENERATED ALWAYS AS (
+                           CASE
+                               WHEN discount <= 0 THEN (price * quantity)
+                               ELSE (price * quantity) - ((price * quantity) * discount)
+                               END
+                           ) STORED,
+                       sale_date DATE NOT NULL DEFAULT CURRENT_DATE,
+                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     -- Foreign Key Constraints
-    CONSTRAINT fk_sales_book FOREIGN KEY (book_id) 
-        REFERENCES books(book_id) ON DELETE RESTRICT,
-    CONSTRAINT fk_sales_employee FOREIGN KEY (employee_id) 
-        REFERENCES employees(employee_id) ON DELETE RESTRICT
+                       CONSTRAINT fk_sales_book FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE RESTRICT,
+                       CONSTRAINT fk_sales_employee FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE RESTRICT
 );
 
 -- =====================================================
@@ -82,42 +75,43 @@ CREATE INDEX idx_sales_book ON sales(book_id);
 -- =====================================================
 
 -- Insert Sample Employees
-INSERT INTO employees (name, gender, phone_number, birthday) VALUES
-('YIN_CHHAPORNROTH', 'Male', '069305880', '2004-09-15');
+INSERT INTO employees (name, gender, phone_number, birthday, role) VALUES
+                                                                       ('YIN_CHHAPORNROTH', 'Male', '069305880', '2004-09-15', 'Admin'),
+                                                                       ('Sebastian_Milder', 'Male', '0123456789', '1998-05-12', 'Cashier');
 
 -- Insert Sample Books
 INSERT INTO books (title, author_name, stock, adding_date) VALUES
-('Think and Grow Rich', 'Napoleon Hill', 4, NOW()),
-('Everything Is F***ed', 'Mark Manson', 5, NOW()),
-('What You Think of Me is None of My Business', 'Terry Cole-Whittaker', 5, NOW()),
-('The 7 Habits of Highly Effective People', 'Stephen R. Covey', 10, NOW()),
-('Atomic Habits', 'James Clear', 8, NOW()
-('Deep Work', 'Cal Newport', 6, NOW()),
-('The Psychology of Money', 'Morgan Housel', 9, NOW()),
-('The Subtle Art of Not Giving a F*ck', 'Mark Manson', 7, NOW()),
-('Rich Dad Poor Dad', 'Robert T. Kiyosaki', 12, NOW()),
-('The Power of Habit', 'Charles Duhigg', 5, NOW()),
-('Start With Why', 'Simon Sinek', 4, NOW()),
-('The Alchemist', 'Paulo Coelho', 15, NOW()),
-('Can''t Hurt Me', 'David Goggins', 6, NOW()),
-('Mindset', 'Carol S. Dweck', 8, NOW()),
-('The Lean Startup', 'Eric Ries', 7, NOW());
+                                                               ('Think and Grow Rich', 'Napoleon Hill', 4, NOW()),
+                                                               ('Everything Is F***ed', 'Mark Manson', 5, NOW()),
+                                                               ('What You Think of Me is None of My Business', 'Terry Cole-Whittaker', 5, NOW()),
+                                                               ('The 7 Habits of Highly Effective People', 'Stephen R. Covey', 10, NOW()),
+                                                               ('Atomic Habits', 'James Clear', 8, NOW()),
+                                                               ('Deep Work', 'Cal Newport', 6, NOW()),
+                                                               ('The Psychology of Money', 'Morgan Housel', 9, NOW()),
+                                                               ('The Subtle Art of Not Giving a F*ck', 'Mark Manson', 7, NOW()),
+                                                               ('Rich Dad Poor Dad', 'Robert T. Kiyosaki', 12, NOW()),
+                                                               ('The Power of Habit', 'Charles Duhigg', 5, NOW()),
+                                                               ('Start With Why', 'Simon Sinek', 4, NOW()),
+                                                               ('The Alchemist', 'Paulo Coelho', 15, NOW()),
+                                                               ('Can''t Hurt Me', 'David Goggins', 6, NOW()),
+                                                               ('Mindset', 'Carol S. Dweck', 8, NOW()),
+                                                               ('The Lean Startup', 'Eric Ries', 7, NOW());
 
 -- Insert Sample Sales
 INSERT INTO sales (customer_name, book_id, employee_id, price, quantity, discount, sale_date) VALUES
-('Sebastian', 3, 1, 15.00, 2, 0.05, '2026-02-20'),
-('Tom', 2, 2, 10.00, 2, 0.00, '2026-02-21'),
-('Alfia', 1, 2, 20.00, 3, 0.20, '2026-02-21'),
-('Sarah', 4, 1, 25.00, 1, 0.10, '2026-02-21'),
-('Mike', 5, 3, 18.00, 2, 0.00, '2026-02-21');
+                                                                                                  ('Sebastian', 3, 1, 15.00, 2, 0.05, '2026-02-20'),
+                                                                                                  ('Tom', 2, 2, 10.00, 2, 0.00, '2026-02-21'),
+                                                                                                  ('Alfia', 1, 1, 20.00, 3, 0.20, '2026-02-21'),
+                                                                                                  ('Sarah', 4, 1, 25.00, 1, 0.10, '2026-02-21'),
+                                                                                                  ('Mike', 5, 2, 18.00, 2, 0.00, '2026-02-21');
 
 -- =====================================================
 -- Views for Common Queries
 -- =====================================================
 
--- View: Sales Summary
+-- Sales Summary
 CREATE OR REPLACE VIEW sales_summary AS
-SELECT 
+SELECT
     s.sale_id,
     s.customer_name,
     b.title AS book_title,
@@ -128,13 +122,13 @@ SELECT
     s.total,
     s.sale_date
 FROM sales s
-JOIN books b ON s.book_id = b.book_id
-JOIN employees e ON s.employee_id = e.employee_id
+         JOIN books b ON s.book_id = b.book_id
+         JOIN employees e ON s.employee_id = e.employee_id
 ORDER BY s.sale_date DESC, s.sale_id DESC;
 
--- View: Book Inventory Status
+-- Book Inventory Status
 CREATE OR REPLACE VIEW book_inventory_status AS
-SELECT 
+SELECT
     b.book_id,
     b.title,
     b.author_name,
@@ -142,54 +136,47 @@ SELECT
     COALESCE(SUM(s.quantity), 0) AS total_sold,
     b.adding_date
 FROM books b
-LEFT JOIN sales s ON b.book_id = s.book_id
+         LEFT JOIN sales s ON b.book_id = s.book_id
 GROUP BY b.book_id, b.title, b.author_name, b.stock, b.adding_date
 ORDER BY b.title;
 
 -- =====================================================
--- Stored Procedures / Functions
+-- Functions
 -- =====================================================
 
--- Function: Get Total Sales for a Date Range
+-- Total Sales for a Date Range
 CREATE OR REPLACE FUNCTION get_total_sales(start_date DATE, end_date DATE)
-RETURNS NUMERIC(10, 2) AS $$
+    RETURNS NUMERIC(10,2) AS $$
 BEGIN
     RETURN COALESCE(
-        (SELECT SUM(total) FROM sales 
-         WHERE sale_date BETWEEN start_date AND end_date),
-        0
-    );
+            (SELECT SUM(total) FROM sales WHERE sale_date BETWEEN start_date AND end_date),
+            0
+           );
 END;
 $$ LANGUAGE plpgsql;
 
--- Function: Get Low Stock Books (stock < threshold)
+-- Get Low Stock Books
 CREATE OR REPLACE FUNCTION get_low_stock_books(threshold INTEGER DEFAULT 5)
-RETURNS TABLE (
-    book_id INTEGER,
-    title VARCHAR(255),
-    author_name VARCHAR(255),
-    stock INTEGER
-) AS $$
+    RETURNS TABLE (
+                      book_id INTEGER,
+                      title VARCHAR(255),
+                      author_name VARCHAR(255),
+                      stock INTEGER
+                  ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT b.book_id, b.title, b.author_name, b.stock
-    FROM books b
-    WHERE b.stock < threshold
-    ORDER BY b.stock ASC;
+        SELECT b.book_id, b.title, b.author_name, b.stock
+        FROM books b
+        WHERE b.stock < threshold
+        ORDER BY b.stock ASC;
 END;
 $$ LANGUAGE plpgsql;
 
 -- =====================================================
--- Comments on Tables
+-- Comments
 -- =====================================================
 COMMENT ON TABLE employees IS 'Employee records and personal information';
 COMMENT ON TABLE books IS 'Book inventory and catalog';
 COMMENT ON TABLE sales IS 'Sales transactions and records';
-
 COMMENT ON COLUMN sales.discount IS 'Discount as decimal (0.05 = 5%, 0.20 = 20%)';
 COMMENT ON COLUMN sales.total IS 'Calculated total: (price * quantity) - (price * quantity * discount)';
-
--- =====================================================
--- End of Schema
--- =====================================================
-

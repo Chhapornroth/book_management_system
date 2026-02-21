@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: bookstore_db
+      POSTGRES_PASSWORD: 2004
+    volumes:
+      - postgres_volumes:/var/lib/postgresql/data
+volumes:
+  postgres_volumes:

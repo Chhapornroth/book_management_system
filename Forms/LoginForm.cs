@@ -29,64 +29,114 @@ namespace WindowsFormsApp.Forms
 
         private void InitializeComponent()
         {
-            this.Text = "Login - " + _role;
-            this.Size = new Size(500, 350);
+            this.Text = $"Login - {_role}";
+            this.Size = new Size(450, 500);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.BackColor = Color.FromArgb(223, 165, 113);
+            this.BackColor = Color.FromArgb(245, 247, 250);
+            this.Padding = new Padding(0);
+
+            // Header Panel
+            var headerPanel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 150,
+                BackColor = _role == "Admin" ? Color.FromArgb(52, 152, 219) : Color.FromArgb(46, 204, 113)
+            };
 
             lblWelcome = new Label
             {
-                Text = "Welcome",
+                Text = $"Welcome, {_role}",
                 Font = new Font("Segoe UI", 24F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(223, 165, 113),
+                ForeColor = Color.White,
                 AutoSize = true,
-                Location = new Point(200, 30)
+                Location = new Point(20, 30)
             };
 
             lblInstruction = new Label
             {
-                Text = "Login with Your FullName",
-                Font = new Font("Segoe UI", 10F),
-                ForeColor = Color.Gray,
+                Text = "Please enter your credentials to continue",
+                Font = new Font("Segoe UI", 11F),
+                ForeColor = Color.FromArgb(240, 240, 240),
                 AutoSize = true,
-                Location = new Point(160, 70)
+                Location = new Point(20, 75)
+            };
+
+            headerPanel.Controls.Add(lblWelcome);
+            headerPanel.Controls.Add(lblInstruction);
+
+            // Content Panel
+            var contentPanel = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Padding = new Padding(40, 30, 40, 30)
+            };
+
+            var lblFullName = new Label
+            {
+                Text = "Full Name",
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94),
+                AutoSize = true,
+                Location = new Point(0, 20)
             };
 
             txtFullName = new TextBox
             {
-                PlaceholderText = "Enter Your FullName",
-                Size = new Size(260, 30),
-                Location = new Point(120, 120),
-                Font = new Font("Segoe UI", 11F)
+                PlaceholderText = "Enter your full name",
+                Size = new Size(350, 35),
+                Location = new Point(0, 45),
+                Font = new Font("Segoe UI", 11F),
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = Color.White,
+                Padding = new Padding(10, 0, 0, 0)
+            };
+
+            var lblPhone = new Label
+            {
+                Text = "Phone Number",
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94),
+                AutoSize = true,
+                Location = new Point(0, 100)
             };
 
             txtPassword = new TextBox
             {
-                PlaceholderText = "Enter Your Phone Number",
-                Size = new Size(260, 30),
-                Location = new Point(120, 170),
+                PlaceholderText = "Enter your phone number",
+                Size = new Size(350, 35),
+                Location = new Point(0, 125),
                 Font = new Font("Segoe UI", 11F),
-                UseSystemPasswordChar = false
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = Color.White,
+                UseSystemPasswordChar = false,
+                Padding = new Padding(10, 0, 0, 0)
             };
 
             btnLogin = new Button
             {
-                Text = "Login",
-                Size = new Size(260, 40),
-                Location = new Point(120, 230),
+                Text = "Sign In",
+                Size = new Size(350, 45),
+                Location = new Point(0, 190),
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                BackColor = Color.FromArgb(4, 153, 216),
-                ForeColor = Color.White
+                BackColor = _role == "Admin" ? Color.FromArgb(52, 152, 219) : Color.FromArgb(46, 204, 113),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
             };
+            btnLogin.FlatAppearance.BorderSize = 0;
+            btnLogin.FlatAppearance.MouseOverBackColor = _role == "Admin" ? Color.FromArgb(41, 128, 185) : Color.FromArgb(39, 174, 96);
             btnLogin.Click += BtnLogin_Click;
 
-            this.Controls.Add(lblWelcome);
-            this.Controls.Add(lblInstruction);
-            this.Controls.Add(txtFullName);
-            this.Controls.Add(txtPassword);
-            this.Controls.Add(btnLogin);
+            contentPanel.Controls.Add(lblFullName);
+            contentPanel.Controls.Add(txtFullName);
+            contentPanel.Controls.Add(lblPhone);
+            contentPanel.Controls.Add(txtPassword);
+            contentPanel.Controls.Add(btnLogin);
+
+            this.Controls.Add(headerPanel);
+            this.Controls.Add(contentPanel);
         }
 
         private void BtnLogin_Click(object sender, EventArgs e)
@@ -97,41 +147,48 @@ namespace WindowsFormsApp.Forms
                 return;
             }
 
-            var employee = _employeeRepo.GetEmployeeByPhone(txtPassword.Text);
-            
-            if (employee != null && employee.Name.Equals(txtFullName.Text, StringComparison.OrdinalIgnoreCase))
+            try
             {
-                var roleEnum = _role == "Admin" ? UserRole.Admin : UserRole.Cashier;
-                var user = UserFactory.CreateUser(roleEnum, employee.EmployeeId, employee.Name);
+                var employee = _employeeRepo.GetEmployeeByPhone(txtPassword.Text.Trim());
                 
-                this.Hide();
-                
-                if (_role == "Admin")
+                if (employee != null && employee.Name.Equals(txtFullName.Text.Trim(), StringComparison.OrdinalIgnoreCase))
                 {
-                    var adminForm = new AdminForm(user);
-                    adminForm.ShowDialog();
+                    var roleEnum = _role == "Admin" ? UserRole.Admin : UserRole.Cashier;
+                    var user = UserFactory.CreateUser(roleEnum, employee.EmployeeId, employee.Name);
+                    
+                    this.Hide();
+                    
+                    if (_role == "Admin")
+                    {
+                        var adminForm = new AdminForm(user);
+                        adminForm.ShowDialog();
+                    }
+                    else
+                    {
+                        var cashierForm = new CashierForm(user);
+                        cashierForm.ShowDialog();
+                    }
+                    
+                    this.Close();
                 }
                 else
                 {
-                    var cashierForm = new CashierForm(user);
-                    cashierForm.ShowDialog();
+                    _errorCount++;
+                    if (_errorCount >= 3)
+                    {
+                        MessageBox.Show("Maximum login attempts reached. Please contact administrator.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        txtPassword.Enabled = false;
+                        btnLogin.Enabled = false;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid credentials. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
-                
-                this.Close();
             }
-            else
+            catch (Exception ex)
             {
-                _errorCount++;
-                if (_errorCount >= 3)
-                {
-                    MessageBox.Show("Maximum login attempts reached. Please contact administrator.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    txtPassword.Enabled = false;
-                    btnLogin.Enabled = false;
-                }
-                else
-                {
-                    MessageBox.Show("Invalid credentials. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                MessageBox.Show($"Database error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

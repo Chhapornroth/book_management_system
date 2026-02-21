@@ -43,6 +43,16 @@ namespace WindowsFormsApp.Data
 
         public int AddSale(Sale sale)
         {
+            if (sale == null) throw new ArgumentNullException(nameof(sale));
+            if (string.IsNullOrWhiteSpace(sale.CustomerName)) throw new ArgumentException("Customer name cannot be empty", nameof(sale));
+            if (sale.BookId <= 0) throw new ArgumentException("Invalid book ID", nameof(sale));
+            if (sale.EmployeeId <= 0) throw new ArgumentException("Invalid employee ID", nameof(sale));
+            if (sale.Price < 0) throw new ArgumentException("Price cannot be negative", nameof(sale));
+            if (sale.Quantity <= 0) throw new ArgumentException("Quantity must be positive", nameof(sale));
+            if (sale.Discount < 0 || sale.Discount > 1) throw new ArgumentException("Discount must be between 0 and 1", nameof(sale));
+            if (sale.SaleDate > DateTime.Now.Date) throw new ArgumentException("Sale date cannot be in the future", nameof(sale));
+            if (sale.SaleDate < DateTime.Now.AddYears(-1).Date) throw new ArgumentException("Sale date cannot be more than 1 year in the past", nameof(sale));
+
             using var conn = DbConnectionManager.Instance.CreateConnection();
             conn.Open();
             
@@ -57,7 +67,11 @@ namespace WindowsFormsApp.Data
             cmd.Parameters.AddWithValue("discount", sale.Discount);
             cmd.Parameters.AddWithValue("date", sale.SaleDate);
             
-            return Convert.ToInt32(cmd.ExecuteScalar());
+            var result = cmd.ExecuteScalar();
+            if (result == null || result == DBNull.Value)
+                throw new InvalidOperationException("Failed to create sale - no ID returned");
+            
+            return Convert.ToInt32(result);
         }
 
         public bool DeleteSale(int saleId)

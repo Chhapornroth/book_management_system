@@ -21,7 +21,7 @@ namespace WindowsFormsApp.Forms
         private ComboBox cmbEmployeeGender;
         private Button btnAddBook, btnUpdateBook, btnDeleteBook;
         private Button btnAddEmployee, btnUpdateEmployee, btnDeleteEmployee;
-        private Button btnDeleteSale, btnLogout;
+        private Button btnDeleteSale, btnLogout, btnBack;
         private TextBox txtSearchBooks, txtSearchEmployees, txtSearchSales;
         private readonly BookRepository _bookRepo = new();
         private readonly EmployeeRepository _employeeRepo = new();
@@ -60,6 +60,22 @@ namespace WindowsFormsApp.Forms
                 Location = new Point(20, 20)
             };
 
+            btnBack = new Button
+            {
+                Text = "⬅️ Back",
+                Size = new Size(120, 40),
+                Location = new Point(this.Width - 280, 15),
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                BackColor = Color.FromArgb(149, 165, 166),
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnBack.FlatAppearance.BorderSize = 0;
+            btnBack.FlatAppearance.MouseOverBackColor = Color.FromArgb(127, 140, 141);
+            btnBack.Click += (s, e) => { this.Hide(); new DashboardForm().Show(); this.Close(); };
+
             btnLogout = new Button
             {
                 Text = "🚪 Logout",
@@ -68,7 +84,7 @@ namespace WindowsFormsApp.Forms
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
@@ -77,6 +93,7 @@ namespace WindowsFormsApp.Forms
             btnLogout.Click += (s, e) => { this.Close(); new DashboardForm().Show(); };
 
             headerPanel.Controls.Add(welcomeLabel);
+            headerPanel.Controls.Add(btnBack);
             headerPanel.Controls.Add(btnLogout);
 
             // Tab Control with modern styling
@@ -114,7 +131,7 @@ namespace WindowsFormsApp.Forms
             // Input Panel
             var inputPanel = new Panel 
             { 
-                Height = 200, 
+                Height = 240, 
                 Dock = DockStyle.Top, 
                 BackColor = Color.White,
                 Padding = new Padding(15)
@@ -123,62 +140,68 @@ namespace WindowsFormsApp.Forms
             var inputTitle = new Label
             {
                 Text = "📚 Book Information",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
                 Location = new Point(15, 15)
             };
             
+            var lblId = new Label { Text = "ID", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(15, 50), AutoSize = true };
+            var lblTitle = new Label { Text = "Title", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(110, 50), AutoSize = true };
+            var lblAuthor = new Label { Text = "Author", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 50), AutoSize = true };
+            var lblStock = new Label { Text = "Stock", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(570, 50), AutoSize = true };
+            var lblDate = new Label { Text = "Date", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(680, 50), AutoSize = true };
+            
             txtBookId = new TextBox 
             { 
-                Location = new Point(15, 45), 
-                Size = new Size(80, 32), 
+                Location = new Point(15, 75), 
+                Size = new Size(80, 35), 
                 Enabled = false, 
                 Text = "Auto",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BackColor = Color.FromArgb(236, 240, 241),
                 BorderStyle = BorderStyle.FixedSingle
             };
             txtBookTitle = new TextBox 
             { 
-                Location = new Point(110, 45), 
-                Size = new Size(220, 32), 
+                Location = new Point(110, 75), 
+                Size = new Size(220, 35), 
                 PlaceholderText = "Book Title",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             txtBookAuthor = new TextBox 
             { 
-                Location = new Point(340, 45), 
-                Size = new Size(220, 32), 
+                Location = new Point(340, 75), 
+                Size = new Size(220, 35), 
                 PlaceholderText = "Author Name",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             txtBookStock = new TextBox 
             { 
-                Location = new Point(570, 45), 
-                Size = new Size(100, 32), 
+                Location = new Point(570, 75), 
+                Size = new Size(100, 35), 
                 PlaceholderText = "Stock",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             dtpBookDate = new DateTimePicker 
             { 
-                Location = new Point(680, 45), 
-                Size = new Size(150, 32),
+                Location = new Point(680, 75), 
+                Size = new Size(150, 35),
                 Value = DateTime.Now.Date,
                 MaxDate = DateTime.Now.Date,
                 MinDate = DateTime.Now.AddYears(-50).Date,
-                Font = new Font("Segoe UI", 10F)
+                Font = new Font("Segoe UI", 12F)
             };
             
             btnAddBook = new Button 
             { 
                 Text = "➕ Add", 
-                Location = new Point(15, 95), 
-                Size = new Size(100, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(15, 125), 
+                Size = new Size(100, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -189,9 +212,9 @@ namespace WindowsFormsApp.Forms
             btnUpdateBook = new Button 
             { 
                 Text = "✏️ Update", 
-                Location = new Point(125, 95), 
-                Size = new Size(100, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(125, 125), 
+                Size = new Size(100, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(52, 152, 219),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -202,9 +225,9 @@ namespace WindowsFormsApp.Forms
             btnDeleteBook = new Button 
             { 
                 Text = "🗑️ Delete", 
-                Location = new Point(235, 95), 
-                Size = new Size(100, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(235, 125), 
+                Size = new Size(100, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -220,27 +243,21 @@ namespace WindowsFormsApp.Forms
             var searchLabel = new Label
             {
                 Text = "🔍 Search:",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(15, 145)
+                Location = new Point(15, 180)
             };
             
             txtSearchBooks = new TextBox 
             { 
-                Location = new Point(90, 142), 
-                Size = new Size(350, 32), 
+                Location = new Point(100, 177), 
+                Size = new Size(350, 35), 
                 PlaceholderText = "Search by title, author...",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             txtSearchBooks.TextChanged += (s, e) => FilterBooks();
-            
-            var lblId = new Label { Text = "ID", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(15, 25), AutoSize = true };
-            var lblTitle = new Label { Text = "Title", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(110, 25), AutoSize = true };
-            var lblAuthor = new Label { Text = "Author", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 25), AutoSize = true };
-            var lblStock = new Label { Text = "Stock", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(570, 25), AutoSize = true };
-            var lblDate = new Label { Text = "Date", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(680, 25), AutoSize = true };
 
             inputPanel.Controls.AddRange(new Control[] { 
                 inputTitle,
@@ -265,28 +282,33 @@ namespace WindowsFormsApp.Forms
                 BorderStyle = BorderStyle.None,
                 CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
                 GridColor = Color.FromArgb(236, 240, 241),
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
                     ForeColor = Color.FromArgb(52, 73, 94),
                     SelectionBackColor = Color.FromArgb(52, 152, 219),
                     SelectionForeColor = Color.White,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 },
                 ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(52, 73, 94),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    WrapMode = DataGridViewTriState.False
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
-                    BackColor = Color.FromArgb(250, 250, 250)
+                    BackColor = Color.FromArgb(250, 250, 250),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 }
             };
             dgvBooks.CellClick += (s, e) => { if (e.RowIndex >= 0) LoadBookToForm(dgvBooks.Rows[e.RowIndex]); };
@@ -302,7 +324,7 @@ namespace WindowsFormsApp.Forms
             
             var inputPanel = new Panel 
             { 
-                Height = 200, 
+                Height = 240, 
                 Dock = DockStyle.Top, 
                 BackColor = Color.White,
                 Padding = new Padding(15)
@@ -311,63 +333,69 @@ namespace WindowsFormsApp.Forms
             var inputTitle = new Label
             {
                 Text = "👥 Employee Information",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
                 Location = new Point(15, 15)
             };
             
+            var lblEmpId = new Label { Text = "ID", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(15, 50), AutoSize = true };
+            var lblEmpName = new Label { Text = "Name", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(110, 50), AutoSize = true };
+            var lblEmpGender = new Label { Text = "Gender", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 50), AutoSize = true };
+            var lblEmpPhone = new Label { Text = "Phone", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(470, 50), AutoSize = true };
+            var lblEmpBirthday = new Label { Text = "Birthday", Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(630, 50), AutoSize = true };
+            
             txtEmployeeId = new TextBox 
             { 
-                Location = new Point(15, 45), 
-                Size = new Size(80, 32), 
+                Location = new Point(15, 75), 
+                Size = new Size(80, 35), 
                 Enabled = false, 
                 Text = "Auto",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BackColor = Color.FromArgb(236, 240, 241),
                 BorderStyle = BorderStyle.FixedSingle
             };
             txtEmployeeName = new TextBox 
             { 
-                Location = new Point(110, 45), 
-                Size = new Size(220, 32), 
+                Location = new Point(110, 75), 
+                Size = new Size(220, 35), 
                 PlaceholderText = "Full Name",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             cmbEmployeeGender = new ComboBox 
             { 
-                Location = new Point(340, 45), 
-                Size = new Size(120, 32),
-                Font = new Font("Segoe UI", 10F),
+                Location = new Point(340, 75), 
+                Size = new Size(120, 35),
+                Font = new Font("Segoe UI", 12F),
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 FlatStyle = FlatStyle.Flat
             };
             cmbEmployeeGender.Items.AddRange(new[] { "Male", "Female" });
             txtEmployeePhone = new TextBox 
             { 
-                Location = new Point(470, 45), 
-                Size = new Size(150, 32), 
+                Location = new Point(470, 75), 
+                Size = new Size(150, 35), 
                 PlaceholderText = "Phone Number",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             dtpEmployeeBirthday = new DateTimePicker 
             { 
-                Location = new Point(630, 45), 
-                Size = new Size(150, 32),
+                Location = new Point(630, 75), 
+                Size = new Size(150, 35),
                 Value = DateTime.Now.AddYears(-25).Date,
                 MaxDate = DateTime.Now.Date,
                 MinDate = DateTime.Now.AddYears(-100).Date,
-                Font = new Font("Segoe UI", 10F)
+                Font = new Font("Segoe UI", 12F)
             };
             
             btnAddEmployee = new Button 
             { 
                 Text = "➕ Add", 
-                Location = new Point(15, 95), 
-                Size = new Size(100, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(15, 125), 
+                Size = new Size(100, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -378,9 +406,9 @@ namespace WindowsFormsApp.Forms
             btnUpdateEmployee = new Button 
             { 
                 Text = "✏️ Update", 
-                Location = new Point(125, 95), 
-                Size = new Size(100, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(125, 125), 
+                Size = new Size(100, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(52, 152, 219),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -391,9 +419,9 @@ namespace WindowsFormsApp.Forms
             btnDeleteEmployee = new Button 
             { 
                 Text = "🗑️ Delete", 
-                Location = new Point(235, 95), 
-                Size = new Size(100, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(235, 125), 
+                Size = new Size(100, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -409,27 +437,21 @@ namespace WindowsFormsApp.Forms
             var searchLabel = new Label
             {
                 Text = "🔍 Search:",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(15, 145)
+                Location = new Point(15, 180)
             };
             
             txtSearchEmployees = new TextBox 
             { 
-                Location = new Point(90, 142), 
-                Size = new Size(350, 32), 
+                Location = new Point(100, 177), 
+                Size = new Size(350, 35), 
                 PlaceholderText = "Search by name, phone...",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             txtSearchEmployees.TextChanged += (s, e) => FilterEmployees();
-            
-            var lblEmpId = new Label { Text = "ID", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(15, 25), AutoSize = true };
-            var lblEmpName = new Label { Text = "Name", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(110, 25), AutoSize = true };
-            var lblEmpGender = new Label { Text = "Gender", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 25), AutoSize = true };
-            var lblEmpPhone = new Label { Text = "Phone", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(470, 25), AutoSize = true };
-            var lblEmpBirthday = new Label { Text = "Birthday", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(630, 25), AutoSize = true };
 
             inputPanel.Controls.AddRange(new Control[] {
                 inputTitle,
@@ -453,28 +475,33 @@ namespace WindowsFormsApp.Forms
                 BorderStyle = BorderStyle.None,
                 CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
                 GridColor = Color.FromArgb(236, 240, 241),
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
                     ForeColor = Color.FromArgb(52, 73, 94),
                     SelectionBackColor = Color.FromArgb(52, 152, 219),
                     SelectionForeColor = Color.White,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 },
                 ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(52, 73, 94),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    WrapMode = DataGridViewTriState.False
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
-                    BackColor = Color.FromArgb(250, 250, 250)
+                    BackColor = Color.FromArgb(250, 250, 250),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 }
             };
             dgvEmployees.CellClick += (s, e) => { if (e.RowIndex >= 0) LoadEmployeeToForm(dgvEmployees.Rows[e.RowIndex]); };
@@ -499,7 +526,7 @@ namespace WindowsFormsApp.Forms
             var inputTitle = new Label
             {
                 Text = "💰 Sales Transactions",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
                 Location = new Point(15, 15)
@@ -509,8 +536,8 @@ namespace WindowsFormsApp.Forms
             { 
                 Text = "🗑️ Delete Selected", 
                 Location = new Point(15, 50), 
-                Size = new Size(140, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Size = new Size(140, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -523,18 +550,18 @@ namespace WindowsFormsApp.Forms
             var searchLabel = new Label
             {
                 Text = "🔍 Search:",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(170, 55)
+                Location = new Point(170, 58)
             };
             
             txtSearchSales = new TextBox 
             { 
-                Location = new Point(240, 50), 
-                Size = new Size(350, 32), 
+                Location = new Point(250, 50), 
+                Size = new Size(350, 35), 
                 PlaceholderText = "Search by customer, date...",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
             txtSearchSales.TextChanged += (s, e) => FilterSales();
@@ -554,28 +581,33 @@ namespace WindowsFormsApp.Forms
                 BorderStyle = BorderStyle.None,
                 CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
                 GridColor = Color.FromArgb(236, 240, 241),
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
                     ForeColor = Color.FromArgb(52, 73, 94),
                     SelectionBackColor = Color.FromArgb(52, 152, 219),
                     SelectionForeColor = Color.White,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 },
                 ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(52, 73, 94),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    WrapMode = DataGridViewTriState.False
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
-                    BackColor = Color.FromArgb(250, 250, 250)
+                    BackColor = Color.FromArgb(250, 250, 250),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 }
             };
             

@@ -14,7 +14,7 @@ namespace WindowsFormsApp.Forms
     {
         private TextBox txtFullName;
         private TextBox txtPassword;
-        private Button btnLogin;
+        private Button btnLogin, btnBack;
         private Label lblWelcome;
         private Label lblInstruction;
         private string _role;
@@ -41,28 +41,44 @@ namespace WindowsFormsApp.Forms
             var headerPanel = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 150,
+                Height = 160,
                 BackColor = _role == "Admin" ? Color.FromArgb(52, 152, 219) : Color.FromArgb(46, 204, 113)
             };
+
+            btnBack = new Button
+            {
+                Text = "⬅️ Back",
+                Size = new Size(100, 35),
+                Location = new Point(20, 15),
+                BackColor = Color.FromArgb(149, 165, 166),
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnBack.FlatAppearance.BorderSize = 0;
+            btnBack.FlatAppearance.MouseOverBackColor = Color.FromArgb(127, 140, 141);
+            btnBack.Click += (s, e) => { this.Hide(); new DashboardForm().Show(); this.Close(); };
 
             lblWelcome = new Label
             {
                 Text = $"Welcome, {_role}",
-                Font = new Font("Segoe UI", 24F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 26F, FontStyle.Bold),
                 ForeColor = Color.White,
                 AutoSize = true,
-                Location = new Point(20, 30)
+                Location = new Point(20, 50)
             };
 
             lblInstruction = new Label
             {
                 Text = "Please enter your credentials to continue",
-                Font = new Font("Segoe UI", 11F),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(240, 240, 240),
                 AutoSize = true,
-                Location = new Point(20, 75)
+                Location = new Point(20, 95)
             };
 
+            headerPanel.Controls.Add(btnBack);
             headerPanel.Controls.Add(lblWelcome);
             headerPanel.Controls.Add(lblInstruction);
 
@@ -79,18 +95,18 @@ namespace WindowsFormsApp.Forms
             var lblFullName = new Label
             {
                 Text = "Full Name",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(centerX, 20)
+                Location = new Point(centerX, 30)
             };
 
             txtFullName = new TextBox
             {
                 PlaceholderText = "Enter your full name",
-                Size = new Size(inputWidth, 35),
-                Location = new Point(centerX, 45),
-                Font = new Font("Segoe UI", 11F),
+                Size = new Size(inputWidth, 38),
+                Location = new Point(centerX, 58),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 Padding = new Padding(10, 0, 0, 0),
@@ -100,18 +116,18 @@ namespace WindowsFormsApp.Forms
             var lblPhone = new Label
             {
                 Text = "Phone Number",
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(centerX, 100)
+                Location = new Point(centerX, 110)
             };
 
             txtPassword = new TextBox
             {
                 PlaceholderText = "Enter your phone number",
-                Size = new Size(inputWidth, 35),
-                Location = new Point(centerX, 125),
-                Font = new Font("Segoe UI", 11F),
+                Size = new Size(inputWidth, 38),
+                Location = new Point(centerX, 138),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 UseSystemPasswordChar = false,
@@ -122,9 +138,9 @@ namespace WindowsFormsApp.Forms
             btnLogin = new Button
             {
                 Text = "Sign In",
-                Size = new Size(inputWidth, 45),
-                Location = new Point(centerX, 190),
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Size = new Size(inputWidth, 48),
+                Location = new Point(centerX, 200),
+                Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                 BackColor = _role == "Admin" ? Color.FromArgb(52, 152, 219) : Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,

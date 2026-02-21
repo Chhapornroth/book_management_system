@@ -22,7 +22,7 @@ namespace WindowsFormsApp.Forms
         private CheckBox chk5Percent, chk10Percent, chk20Percent;
         private DataGridView dgvCart, dgvBooks, dgvSales;
         private Label lblTotal;
-        private Button btnAddToCart, btnProcessSale, btnClearCart, btnLogout;
+        private Button btnAddToCart, btnProcessSale, btnClearCart, btnLogout, btnBack;
         private TabControl tabControl;
         private decimal _currentTotal = 0;
         private readonly BookRepository _bookRepo = new();
@@ -63,6 +63,22 @@ namespace WindowsFormsApp.Forms
                 Location = new Point(20, 20)
             };
 
+            btnBack = new Button
+            {
+                Text = "⬅️ Back",
+                Size = new Size(120, 40),
+                Location = new Point(this.Width - 280, 15),
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                BackColor = Color.FromArgb(149, 165, 166),
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnBack.FlatAppearance.BorderSize = 0;
+            btnBack.FlatAppearance.MouseOverBackColor = Color.FromArgb(127, 140, 141);
+            btnBack.Click += (s, e) => { this.Hide(); new DashboardForm().Show(); this.Close(); };
+
             btnLogout = new Button
             {
                 Text = "🚪 Logout",
@@ -71,7 +87,7 @@ namespace WindowsFormsApp.Forms
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
@@ -80,6 +96,7 @@ namespace WindowsFormsApp.Forms
             btnLogout.Click += (s, e) => { this.Close(); new DashboardForm().Show(); };
 
             headerPanel.Controls.Add(welcomeLabel);
+            headerPanel.Controls.Add(btnBack);
             headerPanel.Controls.Add(btnLogout);
 
             tabControl = new TabControl 
@@ -116,7 +133,7 @@ namespace WindowsFormsApp.Forms
             // Input Panel
             var inputPanel = new Panel 
             { 
-                Height = 260, 
+                Height = 300, 
                 Dock = DockStyle.Top, 
                 BackColor = Color.White,
                 Padding = new Padding(15)
@@ -125,7 +142,7 @@ namespace WindowsFormsApp.Forms
             var inputTitle = new Label
             {
                 Text = "🛒 New Sale",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
                 Location = new Point(15, 15)
@@ -134,85 +151,85 @@ namespace WindowsFormsApp.Forms
             var lblCustomer = new Label
             {
                 Text = "Customer Name",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(15, 45)
+                Location = new Point(15, 50)
             };
             txtCustomerName = new TextBox 
             { 
-                Location = new Point(15, 65), 
-                Size = new Size(200, 32), 
+                Location = new Point(15, 75), 
+                Size = new Size(200, 35), 
                 PlaceholderText = "Enter customer name",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
 
             var lblBook = new Label
             {
                 Text = "Book",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(230, 45)
+                Location = new Point(230, 50)
             };
             cmbBookId = new ComboBox 
             { 
-                Location = new Point(230, 65), 
-                Size = new Size(200, 32), 
+                Location = new Point(230, 75), 
+                Size = new Size(200, 35), 
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 FlatStyle = FlatStyle.Flat
             };
 
             var lblPrice = new Label
             {
                 Text = "Price",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(445, 45)
+                Location = new Point(445, 50)
             };
             txtPrice = new TextBox 
             { 
-                Location = new Point(445, 65), 
-                Size = new Size(100, 32), 
+                Location = new Point(445, 75), 
+                Size = new Size(100, 35), 
                 PlaceholderText = "0.00",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
 
             var lblQuantity = new Label
             {
                 Text = "Quantity",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(555, 45)
+                Location = new Point(555, 50)
             };
             txtQuantity = new TextBox 
             { 
-                Location = new Point(555, 65), 
-                Size = new Size(100, 32), 
+                Location = new Point(555, 75), 
+                Size = new Size(100, 35), 
                 PlaceholderText = "1",
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F),
                 BorderStyle = BorderStyle.FixedSingle
             };
 
             var lblDiscount = new Label
             {
                 Text = "Discount",
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(445, 110)
+                Location = new Point(445, 125)
             };
             chk5Percent = new CheckBox 
             { 
                 Text = "5%", 
-                Location = new Point(445, 130), 
-                Size = new Size(60, 28),
-                Font = new Font("Segoe UI", 10F),
+                Location = new Point(445, 150), 
+                Size = new Size(60, 32),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 Appearance = Appearance.Button,
                 FlatStyle = FlatStyle.Flat
             };
@@ -220,9 +237,9 @@ namespace WindowsFormsApp.Forms
             chk10Percent = new CheckBox 
             { 
                 Text = "10%", 
-                Location = new Point(515, 130), 
-                Size = new Size(60, 28),
-                Font = new Font("Segoe UI", 10F),
+                Location = new Point(515, 150), 
+                Size = new Size(60, 32),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 Appearance = Appearance.Button,
                 FlatStyle = FlatStyle.Flat
             };
@@ -230,9 +247,9 @@ namespace WindowsFormsApp.Forms
             chk20Percent = new CheckBox 
             { 
                 Text = "20%", 
-                Location = new Point(585, 130), 
-                Size = new Size(60, 28),
-                Font = new Font("Segoe UI", 10F),
+                Location = new Point(585, 150), 
+                Size = new Size(60, 32),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 Appearance = Appearance.Button,
                 FlatStyle = FlatStyle.Flat
             };
@@ -245,9 +262,9 @@ namespace WindowsFormsApp.Forms
             btnAddToCart = new Button 
             { 
                 Text = "➕ Add to Cart", 
-                Location = new Point(15, 100), 
-                Size = new Size(120, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(15, 125), 
+                Size = new Size(120, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -260,9 +277,9 @@ namespace WindowsFormsApp.Forms
             btnProcessSale = new Button 
             { 
                 Text = "💳 Process Sale", 
-                Location = new Point(145, 100), 
-                Size = new Size(120, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(145, 125), 
+                Size = new Size(120, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(52, 152, 219),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -275,9 +292,9 @@ namespace WindowsFormsApp.Forms
             btnClearCart = new Button 
             { 
                 Text = "🗑️ Clear Cart", 
-                Location = new Point(275, 100), 
-                Size = new Size(120, 38),
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                Location = new Point(275, 125), 
+                Size = new Size(120, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 196, 15),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -290,18 +307,18 @@ namespace WindowsFormsApp.Forms
             var totalLabel = new Label
             {
                 Text = "Total Amount:",
-                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(15, 180)
+                Location = new Point(15, 210)
             };
 
             lblTotal = new Label
             {
                 Text = "$0.00",
-                Font = new Font("Segoe UI", 24F, FontStyle.Bold),
-                Location = new Point(150, 175),
-                Size = new Size(300, 35),
+                Font = new Font("Segoe UI", 26F, FontStyle.Bold),
+                Location = new Point(150, 205),
+                Size = new Size(300, 40),
                 ForeColor = Color.FromArgb(46, 204, 113)
             };
 
@@ -328,28 +345,33 @@ namespace WindowsFormsApp.Forms
                 BorderStyle = BorderStyle.None,
                 CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
                 GridColor = Color.FromArgb(236, 240, 241),
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
                     ForeColor = Color.FromArgb(52, 73, 94),
                     SelectionBackColor = Color.FromArgb(46, 204, 113),
                     SelectionForeColor = Color.White,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 },
                 ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(46, 204, 113),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    WrapMode = DataGridViewTriState.False
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
-                    BackColor = Color.FromArgb(250, 250, 250)
+                    BackColor = Color.FromArgb(250, 250, 250),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 }
             };
             dgvCart.Columns.Add("BookId", "Book ID");
@@ -377,28 +399,33 @@ namespace WindowsFormsApp.Forms
                 BorderStyle = BorderStyle.None,
                 CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
                 GridColor = Color.FromArgb(236, 240, 241),
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
                     ForeColor = Color.FromArgb(52, 73, 94),
                     SelectionBackColor = Color.FromArgb(46, 204, 113),
                     SelectionForeColor = Color.White,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 },
                 ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(46, 204, 113),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    WrapMode = DataGridViewTriState.False
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
-                    BackColor = Color.FromArgb(250, 250, 250)
+                    BackColor = Color.FromArgb(250, 250, 250),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 }
             };
             
@@ -419,28 +446,33 @@ namespace WindowsFormsApp.Forms
                 BorderStyle = BorderStyle.None,
                 CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
                 GridColor = Color.FromArgb(236, 240, 241),
-                Font = new Font("Segoe UI", 10F),
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
+                ColumnHeadersHeight = 40,
+                RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
                     ForeColor = Color.FromArgb(52, 73, 94),
                     SelectionBackColor = Color.FromArgb(46, 204, 113),
                     SelectionForeColor = Color.White,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 },
                 ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(46, 204, 113),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
-                    Padding = new Padding(5)
+                    Padding = new Padding(8),
+                    WrapMode = DataGridViewTriState.False
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
-                    BackColor = Color.FromArgb(250, 250, 250)
+                    BackColor = Color.FromArgb(250, 250, 250),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold)
                 }
             };
             

@@ -226,7 +226,7 @@ namespace WindowsFormsApp.Forms
                     {
                         var adminForm = new AdminForm(user);
                         adminForm.ShowDialog();
-                        // When child form closes, close login and show dashboard
+                        // When form closes (Back or Logout), show dashboard
                         var dashboard = new DashboardForm();
                         this.Close();
                         dashboard.ShowDialog();
@@ -236,7 +236,7 @@ namespace WindowsFormsApp.Forms
                     {
                         var cashierForm = new CashierForm(user);
                         cashierForm.ShowDialog();
-                        // When child form closes, close login and show dashboard
+                        // When form closes (Back or Logout), show dashboard
                         var dashboard = new DashboardForm();
                         this.Close();
                         dashboard.ShowDialog();

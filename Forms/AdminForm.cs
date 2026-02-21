@@ -560,18 +560,37 @@ namespace WindowsFormsApp.Forms
             btnDeleteSale.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
             btnDeleteSale.Click += BtnDeleteSale_Click;
             
+            var btnSalesLogout = new Button
+            {
+                Text = "🚪 Logout",
+                Location = new Point(185, 50),
+                Size = new Size(120, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                BackColor = Color.FromArgb(231, 76, 60),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnSalesLogout.FlatAppearance.BorderSize = 0;
+            btnSalesLogout.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
+            btnSalesLogout.Click += (s, e) => 
+            { 
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            };
+            
             var searchLabel = new Label
             {
                 Text = "🔍 Search:",
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(170, 58)
+                Location = new Point(320, 58)
             };
             
             txtSearchSales = new TextBox 
             { 
-                Location = new Point(270, 50), 
+                Location = new Point(420, 50), 
                 Size = new Size(350, 35), 
                 PlaceholderText = "Search by customer, date...",
                 Font = new Font("Segoe UI", 12F),
@@ -581,6 +600,7 @@ namespace WindowsFormsApp.Forms
             
             inputPanel.Controls.Add(inputTitle);
             inputPanel.Controls.Add(btnDeleteSale);
+            inputPanel.Controls.Add(btnSalesLogout);
             inputPanel.Controls.Add(searchLabel);
             inputPanel.Controls.Add(txtSearchSales);
             

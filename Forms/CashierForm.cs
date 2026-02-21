@@ -484,6 +484,45 @@ namespace WindowsFormsApp.Forms
         {
             var panel = new Panel { Dock = DockStyle.Fill, BackColor = Color.FromArgb(245, 247, 250), Padding = new Padding(15) };
             
+            var inputPanel = new Panel 
+            { 
+                Height = 70, 
+                Dock = DockStyle.Top, 
+                BackColor = Color.White,
+                Padding = new Padding(15)
+            };
+
+            var inputTitle = new Label
+            {
+                Text = "📊 Sales History",
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94),
+                AutoSize = true,
+                Location = new Point(15, 15)
+            };
+            
+            var btnSalesHistoryLogout = new Button
+            {
+                Text = "🚪 Logout",
+                Location = new Point(15, 40),
+                Size = new Size(120, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                BackColor = Color.FromArgb(231, 76, 60),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnSalesHistoryLogout.FlatAppearance.BorderSize = 0;
+            btnSalesHistoryLogout.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
+            btnSalesHistoryLogout.Click += (s, e) => 
+            { 
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            };
+            
+            inputPanel.Controls.Add(inputTitle);
+            inputPanel.Controls.Add(btnSalesHistoryLogout);
+            
             dgvSales = new DataGridView
             {
                 Dock = DockStyle.Fill,
@@ -524,6 +563,7 @@ namespace WindowsFormsApp.Forms
             };
             
             panel.Controls.Add(dgvSales);
+            panel.Controls.Add(inputPanel);
             tab.Controls.Add(panel);
             LoadSales();
         }

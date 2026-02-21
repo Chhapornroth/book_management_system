@@ -75,7 +75,12 @@ namespace WindowsFormsApp.Forms
             };
             btnBack.FlatAppearance.BorderSize = 0;
             btnBack.FlatAppearance.MouseOverBackColor = Color.FromArgb(127, 140, 141);
-            btnBack.Click += (s, e) => { this.Hide(); new DashboardForm().Show(); this.Close(); };
+            btnBack.Click += (s, e) => 
+            { 
+                var dashboard = new DashboardForm();
+                dashboard.Show();
+                this.Close();
+            };
 
             btnLogout = new Button
             {

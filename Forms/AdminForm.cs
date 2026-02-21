@@ -317,14 +317,22 @@ namespace WindowsFormsApp.Forms
             // Set column widths after data is loaded
             dgvBooks.DataBindingComplete += (s, e) =>
             {
-                if (dgvBooks.Columns.Count > 0)
+                try
                 {
-                    dgvBooks.Columns[0].Width = 80;  // BookId
-                    dgvBooks.Columns[1].Width = 250; // Title
-                    dgvBooks.Columns[2].Width = 200; // AuthorName
-                    dgvBooks.Columns[3].Width = 100; // Stock
-                    dgvBooks.Columns[4].Width = 150; // AddingDate
-                    dgvBooks.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    if (dgvBooks != null && dgvBooks.Columns != null && dgvBooks.Columns.Count >= 5)
+                    {
+                        dgvBooks.Columns[0].Width = 80;  // BookId
+                        dgvBooks.Columns[1].Width = 250; // Title
+                        dgvBooks.Columns[2].Width = 200; // AuthorName
+                        dgvBooks.Columns[3].Width = 100; // Stock
+                        dgvBooks.Columns[4].Width = 150; // AddingDate
+                        dgvBooks.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Silently handle column width setting errors
+                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
                 }
             };
             
@@ -525,14 +533,22 @@ namespace WindowsFormsApp.Forms
             // Set column widths after data is loaded
             dgvEmployees.DataBindingComplete += (s, e) =>
             {
-                if (dgvEmployees.Columns.Count > 0)
+                try
                 {
-                    dgvEmployees.Columns[0].Width = 100; // EmployeeId
-                    dgvEmployees.Columns[1].Width = 250; // Name
-                    dgvEmployees.Columns[2].Width = 120; // Gender
-                    dgvEmployees.Columns[3].Width = 150; // PhoneNumber
-                    dgvEmployees.Columns[4].Width = 150; // Birthday
-                    dgvEmployees.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    if (dgvEmployees != null && dgvEmployees.Columns != null && dgvEmployees.Columns.Count >= 5)
+                    {
+                        dgvEmployees.Columns[0].Width = 100; // EmployeeId
+                        dgvEmployees.Columns[1].Width = 250; // Name
+                        dgvEmployees.Columns[2].Width = 120; // Gender
+                        dgvEmployees.Columns[3].Width = 150; // PhoneNumber
+                        dgvEmployees.Columns[4].Width = 150; // Birthday
+                        dgvEmployees.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Silently handle column width setting errors
+                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
                 }
             };
             
@@ -644,18 +660,26 @@ namespace WindowsFormsApp.Forms
             // Set column widths after data is loaded
             dgvSales.DataBindingComplete += (s, e) =>
             {
-                if (dgvSales.Columns.Count > 0)
+                try
                 {
-                    dgvSales.Columns[0].Width = 80;  // SaleId
-                    dgvSales.Columns[1].Width = 150; // CustomerName
-                    dgvSales.Columns[2].Width = 80;  // BookId
-                    dgvSales.Columns[3].Width = 100; // EmployeeId
-                    dgvSales.Columns[4].Width = 100; // Price
-                    dgvSales.Columns[5].Width = 100; // Quantity
-                    dgvSales.Columns[6].Width = 100; // Discount
-                    dgvSales.Columns[7].Width = 120; // Total
-                    dgvSales.Columns[8].Width = 120; // SaleDate
-                    dgvSales.Columns[8].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    if (dgvSales != null && dgvSales.Columns != null && dgvSales.Columns.Count >= 9)
+                    {
+                        dgvSales.Columns[0].Width = 80;  // SaleId
+                        dgvSales.Columns[1].Width = 150; // CustomerName
+                        dgvSales.Columns[2].Width = 80;  // BookId
+                        dgvSales.Columns[3].Width = 100; // EmployeeId
+                        dgvSales.Columns[4].Width = 100; // Price
+                        dgvSales.Columns[5].Width = 100; // Quantity
+                        dgvSales.Columns[6].Width = 100; // Discount
+                        dgvSales.Columns[7].Width = 120; // Total
+                        dgvSales.Columns[8].Width = 120; // SaleDate
+                        dgvSales.Columns[8].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Silently handle column width setting errors
+                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
                 }
             };
             
@@ -666,52 +690,89 @@ namespace WindowsFormsApp.Forms
 
         private void LoadData()
         {
-            LoadBooks();
-            LoadEmployees();
-            LoadSales();
+            try
+            {
+                LoadBooks();
+                LoadEmployees();
+                LoadSales();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading data: {ex.Message}\n\nPlease check your database connection.", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadBooks()
         {
-            var books = _bookRepo.GetAllBooks();
-            dgvBooks.DataSource = books.Select(b => new
+            try
             {
-                b.BookId,
-                b.Title,
-                b.AuthorName,
-                b.Stock,
-                AddingDate = b.AddingDate.ToShortDateString()
-            }).ToList();
+                var books = _bookRepo.GetAllBooks();
+                if (dgvBooks != null)
+                {
+                    dgvBooks.DataSource = books.Select(b => new
+                    {
+                        b.BookId,
+                        b.Title,
+                        b.AuthorName,
+                        b.Stock,
+                        AddingDate = b.AddingDate.ToShortDateString()
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading books: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadEmployees()
         {
-            var employees = _employeeRepo.GetAllEmployees();
-            dgvEmployees.DataSource = employees.Select(e => new
+            try
             {
-                e.EmployeeId,
-                e.Name,
-                e.Gender,
-                e.PhoneNumber,
-                Birthday = e.Birthday.ToShortDateString()
-            }).ToList();
+                var employees = _employeeRepo.GetAllEmployees();
+                if (dgvEmployees != null)
+                {
+                    dgvEmployees.DataSource = employees.Select(e => new
+                    {
+                        e.EmployeeId,
+                        e.Name,
+                        e.Gender,
+                        e.PhoneNumber,
+                        Birthday = e.Birthday.ToShortDateString()
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading employees: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadSales()
         {
-            var sales = _saleRepo.GetAllSales();
-            dgvSales.DataSource = sales.Select(s => new
+            try
             {
-                s.SaleId,
-                s.CustomerName,
-                s.BookId,
-                s.EmployeeId,
-                Price = s.Price.ToString("C"),
-                s.Quantity,
-                Discount = (s.Discount * 100).ToString("F0") + "%",
-                Total = s.Total.ToString("C"),
-                SaleDate = s.SaleDate.ToShortDateString()
-            }).ToList();
+                var sales = _saleRepo.GetAllSales();
+                if (dgvSales != null)
+                {
+                    dgvSales.DataSource = sales.Select(s => new
+                    {
+                        s.SaleId,
+                        s.CustomerName,
+                        s.BookId,
+                        s.EmployeeId,
+                        Price = s.Price.ToString("C"),
+                        s.Quantity,
+                        Discount = (s.Discount * 100).ToString("F0") + "%",
+                        Total = s.Total.ToString("C"),
+                        SaleDate = s.SaleDate.ToShortDateString()
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading sales: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadBookToForm(DataGridViewRow row)

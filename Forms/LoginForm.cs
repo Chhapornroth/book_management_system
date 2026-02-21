@@ -226,7 +226,13 @@ namespace WindowsFormsApp.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Database error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                var errorMessage = $"Database error: {ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    errorMessage += $"\n\nDetails: {ex.InnerException.Message}";
+                }
+                errorMessage += "\n\nPlease check:\n1. Database connection settings\n2. PostgreSQL is running\n3. Database 'bookstore_db' exists";
+                MessageBox.Show(errorMessage, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

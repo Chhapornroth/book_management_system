@@ -441,14 +441,21 @@ namespace WindowsFormsApp.Forms
             // Set column widths after data is loaded
             dgvBooks.DataBindingComplete += (s, e) =>
             {
-                if (dgvBooks.Columns.Count > 0)
+                try
                 {
-                    dgvBooks.Columns[0].Width = 80;  // BookId
-                    dgvBooks.Columns[1].Width = 300; // Title
-                    dgvBooks.Columns[2].Width = 200; // AuthorName
-                    dgvBooks.Columns[3].Width = 100; // Stock
-                    dgvBooks.Columns[4].Width = 150; // AddingDate
-                    dgvBooks.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    if (dgvBooks != null && dgvBooks.Columns != null && dgvBooks.Columns.Count >= 5)
+                    {
+                        dgvBooks.Columns[0].Width = 80;  // BookId
+                        dgvBooks.Columns[1].Width = 300; // Title
+                        dgvBooks.Columns[2].Width = 200; // AuthorName
+                        dgvBooks.Columns[3].Width = 100; // Stock
+                        dgvBooks.Columns[4].Width = 150; // AddingDate
+                        dgvBooks.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
                 }
             };
             
@@ -502,17 +509,24 @@ namespace WindowsFormsApp.Forms
             // Set column widths after data is loaded
             dgvSales.DataBindingComplete += (s, e) =>
             {
-                if (dgvSales.Columns.Count > 0)
+                try
                 {
-                    dgvSales.Columns[0].Width = 80;  // SaleId
-                    dgvSales.Columns[1].Width = 150; // CustomerName
-                    dgvSales.Columns[2].Width = 80;  // BookId
-                    dgvSales.Columns[3].Width = 100; // Price
-                    dgvSales.Columns[4].Width = 100; // Quantity
-                    dgvSales.Columns[5].Width = 100; // Discount
-                    dgvSales.Columns[6].Width = 120; // Total
-                    dgvSales.Columns[7].Width = 120; // SaleDate
-                    dgvSales.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    if (dgvSales != null && dgvSales.Columns != null && dgvSales.Columns.Count >= 8)
+                    {
+                        dgvSales.Columns[0].Width = 80;  // SaleId
+                        dgvSales.Columns[1].Width = 150; // CustomerName
+                        dgvSales.Columns[2].Width = 80;  // BookId
+                        dgvSales.Columns[3].Width = 100; // Price
+                        dgvSales.Columns[4].Width = 100; // Quantity
+                        dgvSales.Columns[5].Width = 100; // Discount
+                        dgvSales.Columns[6].Width = 120; // Total
+                        dgvSales.Columns[7].Width = 120; // SaleDate
+                        dgvSales.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
                 }
             };
             
@@ -523,40 +537,60 @@ namespace WindowsFormsApp.Forms
 
         private void LoadBooks()
         {
-            var books = _bookRepo.GetAllBooks();
-            cmbBookId.Items.Clear();
-            foreach (var book in books)
+            try
             {
-                cmbBookId.Items.Add($"{book.BookId} - {book.Title}");
-            }
-
-            if (dgvBooks != null)
-            {
-                dgvBooks.DataSource = books.Select(b => new
+                var books = _bookRepo.GetAllBooks();
+                if (cmbBookId != null)
                 {
-                    b.BookId,
-                    b.Title,
-                    b.AuthorName,
-                    b.Stock,
-                    AddingDate = b.AddingDate.ToShortDateString()
-                }).ToList();
+                    cmbBookId.Items.Clear();
+                    foreach (var book in books)
+                    {
+                        cmbBookId.Items.Add($"{book.BookId} - {book.Title}");
+                    }
+                }
+
+                if (dgvBooks != null)
+                {
+                    dgvBooks.DataSource = books.Select(b => new
+                    {
+                        b.BookId,
+                        b.Title,
+                        b.AuthorName,
+                        b.Stock,
+                        AddingDate = b.AddingDate.ToShortDateString()
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading books: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void LoadSales()
         {
-            var sales = _saleRepo.GetAllSales().Where(s => s.EmployeeId == _currentUser.Id).ToList();
-            dgvSales.DataSource = sales.Select(s => new
+            try
             {
-                s.SaleId,
-                s.CustomerName,
-                s.BookId,
-                Price = s.Price.ToString("C"),
-                s.Quantity,
-                Discount = (s.Discount * 100).ToString("F0") + "%",
-                Total = s.Total.ToString("C"),
-                SaleDate = s.SaleDate.ToShortDateString()
-            }).ToList();
+                var sales = _saleRepo.GetAllSales().Where(s => s.EmployeeId == _currentUser.Id).ToList();
+                if (dgvSales != null)
+                {
+                    dgvSales.DataSource = sales.Select(s => new
+                    {
+                        s.SaleId,
+                        s.CustomerName,
+                        s.BookId,
+                        Price = s.Price.ToString("C"),
+                        s.Quantity,
+                        Discount = (s.Discount * 100).ToString("F0") + "%",
+                        Total = s.Total.ToString("C"),
+                        SaleDate = s.SaleDate.ToShortDateString()
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading sales: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void BtnAddToCart_Click(object sender, EventArgs e)

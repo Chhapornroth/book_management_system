@@ -103,11 +103,12 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "Full Name",
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(44, 62, 80),
+                ForeColor = Color.Black,
                 AutoSize = true,
                 Location = new Point(50, 10),
-                BackColor = Color.Transparent,
-                Visible = true
+                BackColor = Color.FromArgb(245, 247, 250),
+                Visible = true,
+                Size = new Size(100, 20)
             };
 
             txtFullName = new TextBox
@@ -126,11 +127,12 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "Phone Number",
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(44, 62, 80),
+                ForeColor = Color.Black,
                 AutoSize = true,
                 Location = new Point(50, 90),
-                BackColor = Color.Transparent,
-                Visible = true
+                BackColor = Color.FromArgb(245, 247, 250),
+                Visible = true,
+                Size = new Size(120, 20)
             };
 
             txtPassword = new TextBox
@@ -162,6 +164,18 @@ namespace WindowsFormsApp.Forms
             btnLogin.FlatAppearance.MouseOverBackColor = _role == "Admin" ? Color.FromArgb(41, 128, 185) : Color.FromArgb(39, 174, 96);
             btnLogin.Click += BtnLogin_Click;
 
+            // Add labels first so they appear on top
+            contentPanel.Controls.Add(lblFullName);
+            contentPanel.Controls.Add(lblPhone);
+            // Then add input controls
+            contentPanel.Controls.Add(txtFullName);
+            contentPanel.Controls.Add(txtPassword);
+            contentPanel.Controls.Add(btnLogin);
+            
+            // Bring labels to front to ensure visibility
+            lblFullName.BringToFront();
+            lblPhone.BringToFront();
+
             // Center all controls on resize
             void CenterControls()
             {
@@ -178,23 +192,16 @@ namespace WindowsFormsApp.Forms
 
             contentPanel.Resize += (s, e) => CenterControls();
 
-            // Add labels first so they appear on top
-            contentPanel.Controls.Add(lblFullName);
-            contentPanel.Controls.Add(lblPhone);
-            // Then add input controls
-            contentPanel.Controls.Add(txtFullName);
-            contentPanel.Controls.Add(txtPassword);
-            contentPanel.Controls.Add(btnLogin);
-            
-            // Bring labels to front to ensure visibility
-            lblFullName.BringToFront();
-            lblPhone.BringToFront();
-
             this.Controls.Add(headerPanel);
             this.Controls.Add(contentPanel);
             
             // Initial centering after form is shown
-            this.Shown += (s, e) => CenterControls();
+            this.Shown += (s, e) => 
+            {
+                CenterControls();
+                lblFullName.BringToFront();
+                lblPhone.BringToFront();
+            };
         }
 
         private void BtnLogin_Click(object sender, EventArgs e)

@@ -348,7 +348,7 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
-                ColumnHeadersHeight = 40,
+                ColumnHeadersHeight = 50,
                 RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -363,10 +363,10 @@ namespace WindowsFormsApp.Forms
                 {
                     BackColor = Color.FromArgb(46, 204, 113),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
                     Padding = new Padding(8),
-                    WrapMode = DataGridViewTriState.False
+                    WrapMode = DataGridViewTriState.True
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -402,7 +402,7 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
-                ColumnHeadersHeight = 40,
+                ColumnHeadersHeight = 50,
                 RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -417,10 +417,10 @@ namespace WindowsFormsApp.Forms
                 {
                     BackColor = Color.FromArgb(46, 204, 113),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
                     Padding = new Padding(8),
-                    WrapMode = DataGridViewTriState.False
+                    WrapMode = DataGridViewTriState.True
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -449,7 +449,7 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
-                ColumnHeadersHeight = 40,
+                ColumnHeadersHeight = 50,
                 RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -464,10 +464,10 @@ namespace WindowsFormsApp.Forms
                 {
                     BackColor = Color.FromArgb(46, 204, 113),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
                     Padding = new Padding(8),
-                    WrapMode = DataGridViewTriState.False
+                    WrapMode = DataGridViewTriState.True
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {

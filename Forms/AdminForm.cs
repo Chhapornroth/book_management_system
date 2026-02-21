@@ -252,7 +252,7 @@ namespace WindowsFormsApp.Forms
             
             txtSearchBooks = new TextBox 
             { 
-                Location = new Point(100, 177), 
+                Location = new Point(120, 177), 
                 Size = new Size(350, 35), 
                 PlaceholderText = "Search by title, author...",
                 Font = new Font("Segoe UI", 12F),
@@ -286,7 +286,7 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
-                ColumnHeadersHeight = 40,
+                ColumnHeadersHeight = 50,
                 RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -301,10 +301,10 @@ namespace WindowsFormsApp.Forms
                 {
                     BackColor = Color.FromArgb(52, 73, 94),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
                     Padding = new Padding(8),
-                    WrapMode = DataGridViewTriState.False
+                    WrapMode = DataGridViewTriState.True
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -447,7 +447,7 @@ namespace WindowsFormsApp.Forms
             
             txtSearchEmployees = new TextBox 
             { 
-                Location = new Point(100, 177), 
+                Location = new Point(120, 177), 
                 Size = new Size(350, 35), 
                 PlaceholderText = "Search by name, phone...",
                 Font = new Font("Segoe UI", 12F),
@@ -480,7 +480,7 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
-                ColumnHeadersHeight = 40,
+                ColumnHeadersHeight = 50,
                 RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -495,10 +495,10 @@ namespace WindowsFormsApp.Forms
                 {
                     BackColor = Color.FromArgb(52, 73, 94),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
                     Padding = new Padding(8),
-                    WrapMode = DataGridViewTriState.False
+                    WrapMode = DataGridViewTriState.True
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -560,7 +560,7 @@ namespace WindowsFormsApp.Forms
             
             txtSearchSales = new TextBox 
             { 
-                Location = new Point(250, 50), 
+                Location = new Point(270, 50), 
                 Size = new Size(350, 35), 
                 PlaceholderText = "Search by customer, date...",
                 Font = new Font("Segoe UI", 12F),
@@ -586,7 +586,7 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
-                ColumnHeadersHeight = 40,
+                ColumnHeadersHeight = 50,
                 RowTemplate = { Height = 35 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -601,10 +601,10 @@ namespace WindowsFormsApp.Forms
                 {
                     BackColor = Color.FromArgb(52, 73, 94),
                     ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleLeft,
                     Padding = new Padding(8),
-                    WrapMode = DataGridViewTriState.False
+                    WrapMode = DataGridViewTriState.True
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
                 {

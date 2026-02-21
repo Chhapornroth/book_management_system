@@ -66,14 +66,14 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 14F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(0, 30)
+                Location = new Point(150, 30)
             };
 
             var adminButton = new Button
             {
                 Text = "👤 Admin",
                 Size = new Size(200, 80),
-                Location = new Point(0, 80),
+                Location = new Point(50, 80),
                 Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                 BackColor = Color.FromArgb(52, 152, 219),
                 ForeColor = Color.White,
@@ -89,7 +89,7 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "💰 Cashier",
                 Size = new Size(200, 80),
-                Location = new Point(0, 80),
+                Location = new Point(300, 80),
                 Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                 BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
@@ -101,7 +101,7 @@ namespace WindowsFormsApp.Forms
             cashierButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(39, 174, 96);
             cashierButton.Click += CashierButton_Click;
 
-            // Center buttons on resize and initial load
+            // Center buttons on resize
             void CenterControls()
             {
                 if (contentPanel.Width > 0)
@@ -114,10 +114,9 @@ namespace WindowsFormsApp.Forms
             }
 
             contentPanel.Resize += (s, e) => CenterControls();
-            contentPanel.Layout += (s, e) => CenterControls();
             
-            // Call once after controls are added
-            this.Load += (s, e) => CenterControls();
+            // Center on initial show
+            this.Shown += (s, e) => CenterControls();
 
             contentPanel.Controls.Add(roleLabel);
             contentPanel.Controls.Add(adminButton);

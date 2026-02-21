@@ -74,6 +74,7 @@ namespace WindowsFormsApp.Forms
             };
 
             var inputWidth = 350;
+            var centerX = (450 - 80 - inputWidth) / 2; // Form width 450, padding 40 each side
 
             var lblFullName = new Label
             {
@@ -81,14 +82,14 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(0, 20)
+                Location = new Point(centerX, 20)
             };
 
             txtFullName = new TextBox
             {
                 PlaceholderText = "Enter your full name",
                 Size = new Size(inputWidth, 35),
-                Location = new Point(0, 45),
+                Location = new Point(centerX, 45),
                 Font = new Font("Segoe UI", 11F),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
@@ -102,14 +103,14 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(0, 100)
+                Location = new Point(centerX, 100)
             };
 
             txtPassword = new TextBox
             {
                 PlaceholderText = "Enter your phone number",
                 Size = new Size(inputWidth, 35),
-                Location = new Point(0, 125),
+                Location = new Point(centerX, 125),
                 Font = new Font("Segoe UI", 11F),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
@@ -122,7 +123,7 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "Sign In",
                 Size = new Size(inputWidth, 45),
-                Location = new Point(0, 190),
+                Location = new Point(centerX, 190),
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BackColor = _role == "Admin" ? Color.FromArgb(52, 152, 219) : Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
@@ -134,25 +135,21 @@ namespace WindowsFormsApp.Forms
             btnLogin.FlatAppearance.MouseOverBackColor = _role == "Admin" ? Color.FromArgb(41, 128, 185) : Color.FromArgb(39, 174, 96);
             btnLogin.Click += BtnLogin_Click;
 
-            // Center all controls
+            // Center all controls on resize
             void CenterControls()
             {
                 if (contentPanel.Width > 0)
                 {
-                    var centerX = (contentPanel.Width - inputWidth) / 2;
-                    lblFullName.Left = centerX;
-                    txtFullName.Left = centerX;
-                    lblPhone.Left = centerX;
-                    txtPassword.Left = centerX;
-                    btnLogin.Left = centerX;
+                    var newCenterX = (contentPanel.Width - inputWidth) / 2;
+                    lblFullName.Left = newCenterX;
+                    txtFullName.Left = newCenterX;
+                    lblPhone.Left = newCenterX;
+                    txtPassword.Left = newCenterX;
+                    btnLogin.Left = newCenterX;
                 }
             }
 
             contentPanel.Resize += (s, e) => CenterControls();
-            contentPanel.Layout += (s, e) => CenterControls();
-            
-            // Call once after controls are added
-            this.Load += (s, e) => CenterControls();
 
             contentPanel.Controls.Add(lblFullName);
             contentPanel.Controls.Add(txtFullName);

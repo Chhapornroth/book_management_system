@@ -245,7 +245,7 @@ namespace WindowsFormsApp.Forms
             btnAddToCart = new Button 
             { 
                 Text = "➕ Add to Cart", 
-                Location = new Point(15, 130), 
+                Location = new Point(15, 100), 
                 Size = new Size(120, 38),
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(46, 204, 113),
@@ -260,7 +260,7 @@ namespace WindowsFormsApp.Forms
             btnProcessSale = new Button 
             { 
                 Text = "💳 Process Sale", 
-                Location = new Point(145, 130), 
+                Location = new Point(145, 100), 
                 Size = new Size(120, 38),
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(52, 152, 219),
@@ -275,7 +275,7 @@ namespace WindowsFormsApp.Forms
             btnClearCart = new Button 
             { 
                 Text = "🗑️ Clear Cart", 
-                Location = new Point(275, 130), 
+                Location = new Point(275, 100), 
                 Size = new Size(120, 38),
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 196, 15),

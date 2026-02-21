@@ -104,14 +104,20 @@ namespace WindowsFormsApp.Forms
             // Center buttons on resize and initial load
             void CenterControls()
             {
-                var centerX = contentPanel.Width / 2;
-                adminButton.Left = centerX - 225;
-                cashierButton.Left = centerX + 25;
-                roleLabel.Left = (contentPanel.Width - roleLabel.Width) / 2;
+                if (contentPanel.Width > 0)
+                {
+                    var centerX = contentPanel.Width / 2;
+                    adminButton.Left = centerX - 225;
+                    cashierButton.Left = centerX + 25;
+                    roleLabel.Left = (contentPanel.Width - roleLabel.Width) / 2;
+                }
             }
 
             contentPanel.Resize += (s, e) => CenterControls();
             contentPanel.Layout += (s, e) => CenterControls();
+            
+            // Call once after controls are added
+            this.Load += (s, e) => CenterControls();
 
             contentPanel.Controls.Add(roleLabel);
             contentPanel.Controls.Add(adminButton);

@@ -137,16 +137,22 @@ namespace WindowsFormsApp.Forms
             // Center all controls
             void CenterControls()
             {
-                var centerX = (contentPanel.Width - inputWidth) / 2;
-                lblFullName.Left = centerX;
-                txtFullName.Left = centerX;
-                lblPhone.Left = centerX;
-                txtPassword.Left = centerX;
-                btnLogin.Left = centerX;
+                if (contentPanel.Width > 0)
+                {
+                    var centerX = (contentPanel.Width - inputWidth) / 2;
+                    lblFullName.Left = centerX;
+                    txtFullName.Left = centerX;
+                    lblPhone.Left = centerX;
+                    txtPassword.Left = centerX;
+                    btnLogin.Left = centerX;
+                }
             }
 
             contentPanel.Resize += (s, e) => CenterControls();
             contentPanel.Layout += (s, e) => CenterControls();
+            
+            // Call once after controls are added
+            this.Load += (s, e) => CenterControls();
 
             contentPanel.Controls.Add(lblFullName);
             contentPanel.Controls.Add(txtFullName);

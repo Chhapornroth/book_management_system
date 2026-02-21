@@ -261,12 +261,12 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(445, 125)
+                Location = new Point(500, 125)
             };
             chk5Percent = new CheckBox 
             { 
                 Text = "5%", 
-                Location = new Point(445, 150), 
+                Location = new Point(500, 150), 
                 Size = new Size(60, 32),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 Appearance = Appearance.Button,
@@ -276,7 +276,7 @@ namespace WindowsFormsApp.Forms
             chk10Percent = new CheckBox 
             { 
                 Text = "10%", 
-                Location = new Point(515, 150), 
+                Location = new Point(570, 150), 
                 Size = new Size(60, 32),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 Appearance = Appearance.Button,
@@ -286,7 +286,7 @@ namespace WindowsFormsApp.Forms
             chk20Percent = new CheckBox 
             { 
                 Text = "20%", 
-                Location = new Point(585, 150), 
+                Location = new Point(640, 150), 
                 Size = new Size(60, 32),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 Appearance = Appearance.Button,
@@ -298,25 +298,16 @@ namespace WindowsFormsApp.Forms
             chk10Percent.CheckedChanged += (s, e) => { if (chk10Percent.Checked) { chk5Percent.Checked = false; chk20Percent.Checked = false; } };
             chk20Percent.CheckedChanged += (s, e) => { if (chk20Percent.Checked) { chk5Percent.Checked = false; chk10Percent.Checked = false; } };
 
-            // Center buttons horizontally
-            var buttonPanel = new Panel
-            {
-                Location = new Point(15, 125),
-                Size = new Size(0, 40),
-                BackColor = Color.Transparent,
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
-            };
-            
             btnAddToCart = new Button 
             { 
                 Text = "➕ Add to Cart", 
+                Location = new Point(15, 143), 
                 Size = new Size(140, 40),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Anchor = AnchorStyles.None
+                Cursor = Cursors.Hand
             };
             btnAddToCart.FlatAppearance.BorderSize = 0;
             btnAddToCart.FlatAppearance.MouseOverBackColor = Color.FromArgb(39, 174, 96);
@@ -325,13 +316,13 @@ namespace WindowsFormsApp.Forms
             btnProcessSale = new Button 
             { 
                 Text = "💳 Process Sale", 
+                Location = new Point(165, 143), 
                 Size = new Size(140, 40),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(52, 152, 219),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Anchor = AnchorStyles.None
+                Cursor = Cursors.Hand
             };
             btnProcessSale.FlatAppearance.BorderSize = 0;
             btnProcessSale.FlatAppearance.MouseOverBackColor = Color.FromArgb(41, 128, 185);
@@ -340,40 +331,17 @@ namespace WindowsFormsApp.Forms
             btnClearCart = new Button 
             { 
                 Text = "🗑️ Clear Cart", 
+                Location = new Point(315, 143), 
                 Size = new Size(140, 40),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 196, 15),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Anchor = AnchorStyles.None
+                Cursor = Cursors.Hand
             };
             btnClearCart.FlatAppearance.BorderSize = 0;
             btnClearCart.FlatAppearance.MouseOverBackColor = Color.FromArgb(243, 156, 18);
             btnClearCart.Click += BtnClearCart_Click;
-            
-            // Center buttons on resize
-            void CenterButtons()
-            {
-                if (buttonPanel.Width > 0)
-                {
-                    var totalButtonWidth = btnAddToCart.Width + btnProcessSale.Width + btnClearCart.Width + 20;
-                    var startX = (buttonPanel.Width - totalButtonWidth) / 2;
-                    btnAddToCart.Left = startX;
-                    btnProcessSale.Left = startX + btnAddToCart.Width + 10;
-                    btnClearCart.Left = startX + btnAddToCart.Width + btnProcessSale.Width + 20;
-                }
-            }
-            
-            buttonPanel.Resize += (s, e) => CenterButtons();
-            inputPanel.Resize += (s, e) => { buttonPanel.Width = inputPanel.Width - 30; CenterButtons(); };
-            
-            // Center buttons on initial load
-            CenterButtons();
-            
-            buttonPanel.Controls.Add(btnAddToCart);
-            buttonPanel.Controls.Add(btnProcessSale);
-            buttonPanel.Controls.Add(btnClearCart);
 
             var totalLabel = new Label
             {
@@ -400,7 +368,7 @@ namespace WindowsFormsApp.Forms
                 lblPrice, txtPrice,
                 lblQuantity, txtQuantity,
                 lblDiscount, chk5Percent, chk10Percent, chk20Percent,
-                buttonPanel,
+                btnAddToCart, btnProcessSale, btnClearCart,
                 totalLabel, lblTotal
             });
             

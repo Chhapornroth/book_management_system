@@ -302,7 +302,7 @@ namespace WindowsFormsApp.Forms
             var buttonPanel = new Panel
             {
                 Location = new Point(15, 125),
-                Size = new Size(inputPanel.Width - 30, 40),
+                Size = new Size(0, 40),
                 BackColor = Color.Transparent,
                 Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
             };

@@ -14,7 +14,7 @@ namespace WindowsFormsApp.Singleton
 
         // TODO: replace with your real values
         private readonly string _connectionString =
-            "Host=localhost;Port=5432;Database=bookstore_db;Username=postgres;Password=your_password;";
+            "Host=localhost;Port=5433;Database=bookstore_db;Username=postgres;Password=2003;";
 
         private DbConnectionManager()
         {

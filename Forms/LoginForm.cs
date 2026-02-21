@@ -17,6 +17,8 @@ namespace WindowsFormsApp.Forms
         private Button btnLogin, btnBack;
         private Label lblWelcome;
         private Label lblInstruction;
+        private Label lblFullName;
+        private Label lblPhone;
         private string _role;
         private int _errorCount = 0;
         private readonly EmployeeRepository _employeeRepo = new();
@@ -97,14 +99,15 @@ namespace WindowsFormsApp.Forms
 
             var inputWidth = 350;
 
-            var lblFullName = new Label
+            lblFullName = new Label
             {
                 Text = "Full Name",
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(44, 62, 80),
                 AutoSize = true,
                 Location = new Point(50, 10),
-                BackColor = Color.Transparent
+                BackColor = Color.Transparent,
+                Visible = true
             };
 
             txtFullName = new TextBox
@@ -119,14 +122,15 @@ namespace WindowsFormsApp.Forms
                 Anchor = AnchorStyles.None
             };
 
-            var lblPhone = new Label
+            lblPhone = new Label
             {
                 Text = "Phone Number",
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(44, 62, 80),
                 AutoSize = true,
                 Location = new Point(50, 90),
-                BackColor = Color.Transparent
+                BackColor = Color.Transparent,
+                Visible = true
             };
 
             txtPassword = new TextBox
@@ -174,11 +178,17 @@ namespace WindowsFormsApp.Forms
 
             contentPanel.Resize += (s, e) => CenterControls();
 
+            // Add labels first so they appear on top
             contentPanel.Controls.Add(lblFullName);
-            contentPanel.Controls.Add(txtFullName);
             contentPanel.Controls.Add(lblPhone);
+            // Then add input controls
+            contentPanel.Controls.Add(txtFullName);
             contentPanel.Controls.Add(txtPassword);
             contentPanel.Controls.Add(btnLogin);
+            
+            // Bring labels to front to ensure visibility
+            lblFullName.BringToFront();
+            lblPhone.BringToFront();
 
             this.Controls.Add(headerPanel);
             this.Controls.Add(contentPanel);

@@ -339,7 +339,7 @@ namespace WindowsFormsApp.Forms
             dgvCart = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -380,15 +380,6 @@ namespace WindowsFormsApp.Forms
             dgvCart.Columns.Add("Quantity", "Qty");
             dgvCart.Columns.Add("Discount", "Discount");
             dgvCart.Columns.Add("Subtotal", "Subtotal");
-            
-            // Set column widths
-            dgvCart.Columns[0].Width = 80;  // Book ID
-            dgvCart.Columns[1].Width = 250; // Title
-            dgvCart.Columns[2].Width = 100; // Price
-            dgvCart.Columns[3].Width = 80;  // Quantity
-            dgvCart.Columns[4].Width = 100; // Discount
-            dgvCart.Columns[5].Width = 120; // Subtotal
-            dgvCart.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
 
             panel.Controls.Add(dgvCart);
             panel.Controls.Add(inputPanel);
@@ -402,7 +393,7 @@ namespace WindowsFormsApp.Forms
             dgvBooks = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -435,27 +426,6 @@ namespace WindowsFormsApp.Forms
                 {
                     BackColor = Color.FromArgb(250, 250, 250),
                     Font = new Font("Segoe UI", 12F, FontStyle.Bold)
-                }
-            };
-            
-            // Set column widths after data is loaded
-            dgvBooks.DataBindingComplete += (s, e) =>
-            {
-                try
-                {
-                    if (dgvBooks != null && dgvBooks.Columns != null && dgvBooks.Columns.Count >= 5)
-                    {
-                        dgvBooks.Columns[0].Width = 80;  // BookId
-                        dgvBooks.Columns[1].Width = 300; // Title
-                        dgvBooks.Columns[2].Width = 200; // AuthorName
-                        dgvBooks.Columns[3].Width = 100; // Stock
-                        dgvBooks.Columns[4].Width = 150; // AddingDate
-                        dgvBooks.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
                 }
             };
             
@@ -470,7 +440,7 @@ namespace WindowsFormsApp.Forms
             dgvSales = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -503,30 +473,6 @@ namespace WindowsFormsApp.Forms
                 {
                     BackColor = Color.FromArgb(250, 250, 250),
                     Font = new Font("Segoe UI", 12F, FontStyle.Bold)
-                }
-            };
-            
-            // Set column widths after data is loaded
-            dgvSales.DataBindingComplete += (s, e) =>
-            {
-                try
-                {
-                    if (dgvSales != null && dgvSales.Columns != null && dgvSales.Columns.Count >= 8)
-                    {
-                        dgvSales.Columns[0].Width = 80;  // SaleId
-                        dgvSales.Columns[1].Width = 150; // CustomerName
-                        dgvSales.Columns[2].Width = 80;  // BookId
-                        dgvSales.Columns[3].Width = 100; // Price
-                        dgvSales.Columns[4].Width = 100; // Quantity
-                        dgvSales.Columns[5].Width = 100; // Discount
-                        dgvSales.Columns[6].Width = 120; // Total
-                        dgvSales.Columns[7].Width = 120; // SaleDate
-                        dgvSales.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
                 }
             };
             

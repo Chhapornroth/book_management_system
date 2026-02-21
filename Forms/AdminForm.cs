@@ -276,7 +276,7 @@ namespace WindowsFormsApp.Forms
             dgvBooks = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
@@ -313,28 +313,6 @@ namespace WindowsFormsApp.Forms
                 }
             };
             dgvBooks.CellClick += (s, e) => { if (e.RowIndex >= 0) LoadBookToForm(dgvBooks.Rows[e.RowIndex]); };
-            
-            // Set column widths after data is loaded
-            dgvBooks.DataBindingComplete += (s, e) =>
-            {
-                try
-                {
-                    if (dgvBooks != null && dgvBooks.Columns != null && dgvBooks.Columns.Count >= 5)
-                    {
-                        dgvBooks.Columns[0].Width = 80;  // BookId
-                        dgvBooks.Columns[1].Width = 250; // Title
-                        dgvBooks.Columns[2].Width = 200; // AuthorName
-                        dgvBooks.Columns[3].Width = 100; // Stock
-                        dgvBooks.Columns[4].Width = 150; // AddingDate
-                        dgvBooks.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Silently handle column width setting errors
-                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
-                }
-            };
             
             panel.Controls.Add(dgvBooks);
             panel.Controls.Add(inputPanel);
@@ -492,7 +470,7 @@ namespace WindowsFormsApp.Forms
             dgvEmployees = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
@@ -529,28 +507,6 @@ namespace WindowsFormsApp.Forms
                 }
             };
             dgvEmployees.CellClick += (s, e) => { if (e.RowIndex >= 0) LoadEmployeeToForm(dgvEmployees.Rows[e.RowIndex]); };
-            
-            // Set column widths after data is loaded
-            dgvEmployees.DataBindingComplete += (s, e) =>
-            {
-                try
-                {
-                    if (dgvEmployees != null && dgvEmployees.Columns != null && dgvEmployees.Columns.Count >= 5)
-                    {
-                        dgvEmployees.Columns[0].Width = 100; // EmployeeId
-                        dgvEmployees.Columns[1].Width = 250; // Name
-                        dgvEmployees.Columns[2].Width = 120; // Gender
-                        dgvEmployees.Columns[3].Width = 150; // PhoneNumber
-                        dgvEmployees.Columns[4].Width = 150; // Birthday
-                        dgvEmployees.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Silently handle column width setting errors
-                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
-                }
-            };
             
             panel.Controls.Add(dgvEmployees);
             panel.Controls.Add(inputPanel);
@@ -620,7 +576,7 @@ namespace WindowsFormsApp.Forms
             dgvSales = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 ReadOnly = true,
                 BackgroundColor = Color.White,
@@ -654,32 +610,6 @@ namespace WindowsFormsApp.Forms
                 {
                     BackColor = Color.FromArgb(250, 250, 250),
                     Font = new Font("Segoe UI", 12F, FontStyle.Bold)
-                }
-            };
-            
-            // Set column widths after data is loaded
-            dgvSales.DataBindingComplete += (s, e) =>
-            {
-                try
-                {
-                    if (dgvSales != null && dgvSales.Columns != null && dgvSales.Columns.Count >= 9)
-                    {
-                        dgvSales.Columns[0].Width = 80;  // SaleId
-                        dgvSales.Columns[1].Width = 150; // CustomerName
-                        dgvSales.Columns[2].Width = 80;  // BookId
-                        dgvSales.Columns[3].Width = 100; // EmployeeId
-                        dgvSales.Columns[4].Width = 100; // Price
-                        dgvSales.Columns[5].Width = 100; // Quantity
-                        dgvSales.Columns[6].Width = 100; // Discount
-                        dgvSales.Columns[7].Width = 120; // Total
-                        dgvSales.Columns[8].Width = 120; // SaleDate
-                        dgvSales.Columns[8].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Fill remaining space
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Silently handle column width setting errors
-                    System.Diagnostics.Debug.WriteLine($"Error setting column widths: {ex.Message}");
                 }
             };
             

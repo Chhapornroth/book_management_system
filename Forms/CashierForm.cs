@@ -17,8 +17,10 @@ namespace WindowsFormsApp.Forms
     /// </summary>
     public partial class CashierForm : Form
     {
-        private TextBox txtCustomerName, txtPrice, txtQuantity;
-        private ComboBox cmbBookId;
+        private TextBox txtCustomerName, txtPrice, txtQuantity, txtBookSearch;
+        private ListBox lstBookResults;
+        private Panel pnlBookSearch;
+        private List<Book> _allBooks = new();
         private CheckBox chk5Percent, chk10Percent, chk20Percent;
         private DataGridView dgvCart, dgvBooks, dgvSales;
         private Label lblTotal;
@@ -133,7 +135,7 @@ namespace WindowsFormsApp.Forms
             // Input Panel
             var inputPanel = new Panel 
             { 
-                Height = 300, 
+                Height = 320, 
                 Dock = DockStyle.Top, 
                 BackColor = Color.White,
                 Padding = new Padding(15)
@@ -173,14 +175,51 @@ namespace WindowsFormsApp.Forms
                 AutoSize = true,
                 Location = new Point(230, 50)
             };
-            cmbBookId = new ComboBox 
+            
+            // Searchable book field
+            txtBookSearch = new TextBox 
             { 
                 Location = new Point(230, 75), 
                 Size = new Size(200, 35), 
-                DropDownStyle = ComboBoxStyle.DropDownList,
+                PlaceholderText = "Search book by ID or title...",
                 Font = new Font("Segoe UI", 12F),
-                FlatStyle = FlatStyle.Flat
+                BorderStyle = BorderStyle.FixedSingle,
+                AutoCompleteMode = AutoCompleteMode.Suggest,
+                AutoCompleteSource = AutoCompleteSource.CustomSource
             };
+            txtBookSearch.TextChanged += TxtBookSearch_TextChanged;
+            txtBookSearch.Leave += (s, e) => { if (pnlBookSearch != null) pnlBookSearch.Visible = false; };
+            
+            // Dropdown results panel
+            pnlBookSearch = new Panel
+            {
+                Location = new Point(230, 110),
+                Size = new Size(200, 150),
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                Visible = false
+            };
+            
+            lstBookResults = new ListBox
+            {
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 11F),
+                BorderStyle = BorderStyle.None,
+                DisplayMember = "DisplayText"
+            };
+            lstBookResults.SelectedIndexChanged += (s, e) =>
+            {
+                if (lstBookResults.SelectedIndex >= 0 && lstBookResults.Tag is List<Book> books)
+                {
+                    var selectedBook = books[lstBookResults.SelectedIndex];
+                    txtBookSearch.Text = $"{selectedBook.BookId} - {selectedBook.Title}";
+                    txtPrice.Text = "0.00"; // Reset price, user can enter
+                    pnlBookSearch.Visible = false;
+                    txtBookSearch.Focus();
+                }
+            };
+            
+            pnlBookSearch.Controls.Add(lstBookResults);
 
             var lblPrice = new Label
             {
@@ -259,16 +298,25 @@ namespace WindowsFormsApp.Forms
             chk10Percent.CheckedChanged += (s, e) => { if (chk10Percent.Checked) { chk5Percent.Checked = false; chk20Percent.Checked = false; } };
             chk20Percent.CheckedChanged += (s, e) => { if (chk20Percent.Checked) { chk5Percent.Checked = false; chk10Percent.Checked = false; } };
 
+            // Center buttons horizontally
+            var buttonPanel = new Panel
+            {
+                Location = new Point(15, 125),
+                Size = new Size(inputPanel.Width - 30, 40),
+                BackColor = Color.Transparent,
+                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
+            };
+            
             btnAddToCart = new Button 
             { 
                 Text = "➕ Add to Cart", 
-                Location = new Point(15, 125), 
-                Size = new Size(120, 40),
+                Size = new Size(140, 40),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.None
             };
             btnAddToCart.FlatAppearance.BorderSize = 0;
             btnAddToCart.FlatAppearance.MouseOverBackColor = Color.FromArgb(39, 174, 96);
@@ -277,13 +325,13 @@ namespace WindowsFormsApp.Forms
             btnProcessSale = new Button 
             { 
                 Text = "💳 Process Sale", 
-                Location = new Point(145, 125), 
-                Size = new Size(120, 40),
+                Size = new Size(140, 40),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(52, 152, 219),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.None
             };
             btnProcessSale.FlatAppearance.BorderSize = 0;
             btnProcessSale.FlatAppearance.MouseOverBackColor = Color.FromArgb(41, 128, 185);
@@ -292,17 +340,40 @@ namespace WindowsFormsApp.Forms
             btnClearCart = new Button 
             { 
                 Text = "🗑️ Clear Cart", 
-                Location = new Point(275, 125), 
-                Size = new Size(120, 40),
+                Size = new Size(140, 40),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 196, 15),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.None
             };
             btnClearCart.FlatAppearance.BorderSize = 0;
             btnClearCart.FlatAppearance.MouseOverBackColor = Color.FromArgb(243, 156, 18);
             btnClearCart.Click += BtnClearCart_Click;
+            
+            // Center buttons on resize
+            void CenterButtons()
+            {
+                if (buttonPanel.Width > 0)
+                {
+                    var totalButtonWidth = btnAddToCart.Width + btnProcessSale.Width + btnClearCart.Width + 20;
+                    var startX = (buttonPanel.Width - totalButtonWidth) / 2;
+                    btnAddToCart.Left = startX;
+                    btnProcessSale.Left = startX + btnAddToCart.Width + 10;
+                    btnClearCart.Left = startX + btnAddToCart.Width + btnProcessSale.Width + 20;
+                }
+            }
+            
+            buttonPanel.Resize += (s, e) => CenterButtons();
+            inputPanel.Resize += (s, e) => { buttonPanel.Width = inputPanel.Width - 30; CenterButtons(); };
+            
+            // Center buttons on initial load
+            CenterButtons();
+            
+            buttonPanel.Controls.Add(btnAddToCart);
+            buttonPanel.Controls.Add(btnProcessSale);
+            buttonPanel.Controls.Add(btnClearCart);
 
             var totalLabel = new Label
             {
@@ -325,11 +396,11 @@ namespace WindowsFormsApp.Forms
             inputPanel.Controls.AddRange(new Control[] {
                 inputTitle,
                 lblCustomer, txtCustomerName,
-                lblBook, cmbBookId,
+                lblBook, txtBookSearch, pnlBookSearch,
                 lblPrice, txtPrice,
                 lblQuantity, txtQuantity,
                 lblDiscount, chk5Percent, chk10Percent, chk20Percent,
-                btnAddToCart, btnProcessSale, btnClearCart,
+                buttonPanel,
                 totalLabel, lblTotal
             });
             
@@ -349,7 +420,7 @@ namespace WindowsFormsApp.Forms
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
                 ColumnHeadersHeight = 50,
-                RowTemplate = { Height = 35 },
+                RowTemplate = { Height = 45 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
@@ -403,7 +474,7 @@ namespace WindowsFormsApp.Forms
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
                 ColumnHeadersHeight = 50,
-                RowTemplate = { Height = 35 },
+                RowTemplate = { Height = 45 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
@@ -450,7 +521,7 @@ namespace WindowsFormsApp.Forms
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
                 ColumnHeadersHeight = 50,
-                RowTemplate = { Height = 35 },
+                RowTemplate = { Height = 45 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
@@ -485,19 +556,11 @@ namespace WindowsFormsApp.Forms
         {
             try
             {
-                var books = _bookRepo.GetAllBooks();
-                if (cmbBookId != null)
-                {
-                    cmbBookId.Items.Clear();
-                    foreach (var book in books)
-                    {
-                        cmbBookId.Items.Add($"{book.BookId} - {book.Title}");
-                    }
-                }
+                _allBooks = _bookRepo.GetAllBooks();
 
                 if (dgvBooks != null)
                 {
-                    dgvBooks.DataSource = books.Select(b => new
+                    dgvBooks.DataSource = _allBooks.Select(b => new
                     {
                         b.BookId,
                         b.Title,
@@ -510,6 +573,40 @@ namespace WindowsFormsApp.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading books: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        
+        private void TxtBookSearch_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtBookSearch.Text))
+            {
+                pnlBookSearch.Visible = false;
+                return;
+            }
+
+            var searchText = txtBookSearch.Text.ToLower();
+            var matches = _allBooks.Where(b => 
+                b.BookId.ToString().Contains(searchText) || 
+                b.Title.ToLower().Contains(searchText) ||
+                b.AuthorName.ToLower().Contains(searchText)
+            ).Take(10).ToList();
+
+            if (matches.Count > 0)
+            {
+                lstBookResults.Items.Clear();
+                foreach (var book in matches)
+                {
+                    // Format: "ID - Title (Author)"
+                    lstBookResults.Items.Add($"{book.BookId} - {book.Title} ({book.AuthorName})");
+                }
+                // Store book objects in Tag for retrieval
+                lstBookResults.Tag = matches;
+                pnlBookSearch.Visible = true;
+                pnlBookSearch.BringToFront();
+            }
+            else
+            {
+                pnlBookSearch.Visible = false;
             }
         }
 
@@ -541,7 +638,7 @@ namespace WindowsFormsApp.Forms
 
         private void BtnAddToCart_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtCustomerName.Text) || cmbBookId.SelectedIndex < 0 ||
+            if (string.IsNullOrWhiteSpace(txtCustomerName.Text) || string.IsNullOrWhiteSpace(txtBookSearch.Text) ||
                 !decimal.TryParse(txtPrice.Text, out var price) || !int.TryParse(txtQuantity.Text, out var qty))
             {
                 MessageBox.Show("Please fill all fields correctly", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -561,18 +658,22 @@ namespace WindowsFormsApp.Forms
                 return;
             }
 
-            // Safe null check for SelectedItem
-            if (cmbBookId.SelectedItem == null)
+            // Parse book ID from search text (format: "ID - Title" or just "ID")
+            int bookId;
+            var bookIdStr = txtBookSearch.Text.Split('-')[0].Trim();
+            if (!int.TryParse(bookIdStr, out bookId))
             {
-                MessageBox.Show("Please select a book", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var bookIdStr = cmbBookId.SelectedItem.ToString()?.Split('-')[0].Trim();
-            if (string.IsNullOrEmpty(bookIdStr) || !int.TryParse(bookIdStr, out var bookId))
-            {
-                MessageBox.Show("Invalid book selection", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                // Try to find by title
+                var foundBook = _allBooks.FirstOrDefault(b => 
+                    b.Title.Equals(txtBookSearch.Text, StringComparison.OrdinalIgnoreCase) ||
+                    b.Title.ToLower().Contains(txtBookSearch.Text.ToLower()));
+                
+                if (foundBook == null)
+                {
+                    MessageBox.Show("Please select a valid book from the search results", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                bookId = foundBook.BookId;
             }
 
             var discount = 0m;
@@ -767,12 +868,13 @@ namespace WindowsFormsApp.Forms
         private void ClearForm()
         {
             txtCustomerName.Clear();
-            cmbBookId.SelectedIndex = -1;
+            txtBookSearch.Clear();
             txtPrice.Clear();
             txtQuantity.Clear();
             chk5Percent.Checked = false;
             chk10Percent.Checked = false;
             chk20Percent.Checked = false;
+            if (pnlBookSearch != null) pnlBookSearch.Visible = false;
         }
 
         private class CartItem

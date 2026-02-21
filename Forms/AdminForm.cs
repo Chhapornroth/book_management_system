@@ -289,7 +289,7 @@ namespace WindowsFormsApp.Forms
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
                 ColumnHeadersHeight = 50,
-                RowTemplate = { Height = 35 },
+                RowTemplate = { Height = 45 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
@@ -484,7 +484,7 @@ namespace WindowsFormsApp.Forms
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
                 ColumnHeadersHeight = 50,
-                RowTemplate = { Height = 35 },
+                RowTemplate = { Height = 45 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
@@ -591,7 +591,7 @@ namespace WindowsFormsApp.Forms
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
                 ColumnHeadersHeight = 50,
-                RowTemplate = { Height = 35 },
+                RowTemplate = { Height = 45 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.White,
@@ -1268,34 +1268,126 @@ namespace WindowsFormsApp.Forms
 
         private void FilterBooks()
         {
-            // Simple filtering - can be enhanced
-            if (string.IsNullOrWhiteSpace(txtSearchBooks.Text))
+            try
             {
-                LoadBooks();
-                return;
+                if (string.IsNullOrWhiteSpace(txtSearchBooks.Text))
+                {
+                    LoadBooks();
+                    return;
+                }
+
+                var searchText = txtSearchBooks.Text.ToLower();
+                var books = _bookRepo.GetAllBooks();
+                
+                var filtered = books.Where(b => 
+                    b.Title.ToLower().Contains(searchText) ||
+                    b.AuthorName.ToLower().Contains(searchText) ||
+                    b.BookId.ToString().Contains(searchText) ||
+                    b.Stock.ToString().Contains(searchText) ||
+                    b.AddingDate.ToShortDateString().ToLower().Contains(searchText)
+                ).ToList();
+
+                if (dgvBooks != null)
+                {
+                    dgvBooks.DataSource = filtered.Select(b => new
+                    {
+                        b.BookId,
+                        b.Title,
+                        b.AuthorName,
+                        b.Stock,
+                        AddingDate = b.AddingDate.ToShortDateString()
+                    }).ToList();
+                }
             }
-            // For now, reload all and filter in memory
-            LoadBooks();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error filtering books: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void FilterEmployees()
         {
-            if (string.IsNullOrWhiteSpace(txtSearchEmployees.Text))
+            try
             {
-                LoadEmployees();
-                return;
+                if (string.IsNullOrWhiteSpace(txtSearchEmployees.Text))
+                {
+                    LoadEmployees();
+                    return;
+                }
+
+                var searchText = txtSearchEmployees.Text.ToLower();
+                var employees = _employeeRepo.GetAllEmployees();
+                
+                var filtered = employees.Where(e => 
+                    e.Name.ToLower().Contains(searchText) ||
+                    e.PhoneNumber.Contains(searchText) ||
+                    e.EmployeeId.ToString().Contains(searchText) ||
+                    e.Gender.ToLower().Contains(searchText) ||
+                    e.Birthday.ToShortDateString().ToLower().Contains(searchText)
+                ).ToList();
+
+                if (dgvEmployees != null)
+                {
+                    dgvEmployees.DataSource = filtered.Select(e => new
+                    {
+                        e.EmployeeId,
+                        e.Name,
+                        e.Gender,
+                        e.PhoneNumber,
+                        Birthday = e.Birthday.ToShortDateString()
+                    }).ToList();
+                }
             }
-            LoadEmployees();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error filtering employees: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void FilterSales()
         {
-            if (string.IsNullOrWhiteSpace(txtSearchSales.Text))
+            try
             {
-                LoadSales();
-                return;
+                if (string.IsNullOrWhiteSpace(txtSearchSales.Text))
+                {
+                    LoadSales();
+                    return;
+                }
+
+                var searchText = txtSearchSales.Text.ToLower();
+                var sales = _saleRepo.GetAllSales();
+                
+                var filtered = sales.Where(s => 
+                    s.CustomerName.ToLower().Contains(searchText) ||
+                    s.SaleId.ToString().Contains(searchText) ||
+                    s.BookId.ToString().Contains(searchText) ||
+                    s.EmployeeId.ToString().Contains(searchText) ||
+                    s.Price.ToString().Contains(searchText) ||
+                    s.Quantity.ToString().Contains(searchText) ||
+                    s.Total.ToString().Contains(searchText) ||
+                    s.SaleDate.ToShortDateString().ToLower().Contains(searchText)
+                ).ToList();
+
+                if (dgvSales != null)
+                {
+                    dgvSales.DataSource = filtered.Select(s => new
+                    {
+                        s.SaleId,
+                        s.CustomerName,
+                        s.BookId,
+                        s.EmployeeId,
+                        Price = s.Price.ToString("C"),
+                        s.Quantity,
+                        Discount = (s.Discount * 100).ToString("F0") + "%",
+                        Total = s.Total.ToString("C"),
+                        SaleDate = s.SaleDate.ToShortDateString()
+                    }).ToList();
+                }
             }
-            LoadSales();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error filtering sales: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

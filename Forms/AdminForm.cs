@@ -65,7 +65,6 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "⬅️ Back",
                 Size = new Size(120, 40),
-                Location = new Point(this.Width - 280, 15),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(149, 165, 166),
                 ForeColor = Color.White,
@@ -85,7 +84,6 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "🚪 Logout",
                 Size = new Size(120, 40),
-                Location = new Point(this.Width - 140, 15),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
@@ -100,6 +98,16 @@ namespace WindowsFormsApp.Forms
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             };
+            
+            // Position buttons on the right side
+            void PositionButtons()
+            {
+                btnLogout.Location = new Point(headerPanel.Width - btnLogout.Width - 15, 15);
+                btnBack.Location = new Point(headerPanel.Width - btnLogout.Width - btnBack.Width - 25, 15);
+            }
+            
+            this.Shown += (s, e) => PositionButtons();
+            headerPanel.Resize += (s, e) => PositionButtons();
 
             headerPanel.Controls.Add(welcomeLabel);
             headerPanel.Controls.Add(btnBack);

@@ -24,7 +24,7 @@ namespace WindowsFormsApp.Forms
         private CheckBox chk5Percent, chk10Percent, chk20Percent;
         private DataGridView dgvCart, dgvBooks, dgvSales;
         private Label lblTotal;
-        private Button btnAddToCart, btnProcessSale, btnClearCart, btnLogout;
+        private Button btnAddToCart, btnProcessSale, btnClearCart, btnClearInput, btnLogout;
         private TabControl tabControl;
         private decimal _currentTotal = 0;
         private readonly BookRepository _bookRepo = new();
@@ -338,6 +338,21 @@ namespace WindowsFormsApp.Forms
             btnClearCart.FlatAppearance.MouseOverBackColor = Color.FromArgb(243, 156, 18);
             btnClearCart.Click += BtnClearCart_Click;
 
+            btnClearInput = new Button 
+            { 
+                Text = "🧹 Clear Input", 
+                Location = new Point(465, 143), 
+                Size = new Size(140, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                BackColor = Color.FromArgb(155, 89, 182),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnClearInput.FlatAppearance.BorderSize = 0;
+            btnClearInput.FlatAppearance.MouseOverBackColor = Color.FromArgb(142, 68, 173);
+            btnClearInput.Click += (s, e) => ClearForm();
+
             var totalLabel = new Label
             {
                 Text = "Total Amount:",
@@ -363,7 +378,7 @@ namespace WindowsFormsApp.Forms
                 lblPrice, txtPrice,
                 lblQuantity, txtQuantity,
                 lblDiscount, chk5Percent, chk10Percent, chk20Percent,
-                btnAddToCart, btnProcessSale, btnClearCart,
+                btnAddToCart, btnProcessSale, btnClearCart, btnClearInput,
                 totalLabel, lblTotal
             });
             

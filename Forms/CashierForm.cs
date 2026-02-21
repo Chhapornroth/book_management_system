@@ -92,15 +92,6 @@ namespace WindowsFormsApp.Forms
             
             this.Shown += (s, e) => PositionLogoutButton();
             headerPanel.Resize += (s, e) => PositionLogoutButton();
-            
-            // Handle form closing (X button) to show dashboard
-            this.FormClosing += (s, e) =>
-            {
-                if (this.DialogResult == DialogResult.None)
-                {
-                    this.DialogResult = DialogResult.Cancel;
-                }
-            };
 
             headerPanel.Controls.Add(welcomeLabel);
             headerPanel.Controls.Add(btnLogout);

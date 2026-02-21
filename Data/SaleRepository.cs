@@ -50,8 +50,8 @@ namespace WindowsFormsApp.Data
             if (sale.Price < 0) throw new ArgumentException("Price cannot be negative", nameof(sale));
             if (sale.Quantity <= 0) throw new ArgumentException("Quantity must be positive", nameof(sale));
             if (sale.Discount < 0 || sale.Discount > 1) throw new ArgumentException("Discount must be between 0 and 1", nameof(sale));
-            if (sale.SaleDate > DateTime.Now.Date) throw new ArgumentException("Sale date cannot be in the future", nameof(sale));
-            if (sale.SaleDate < DateTime.Now.AddYears(-1).Date) throw new ArgumentException("Sale date cannot be more than 1 year in the past", nameof(sale));
+            if (sale.SaleDate.Date > DateTime.Now.Date) throw new ArgumentException("Sale date cannot be in the future", nameof(sale));
+            if (sale.SaleDate.Date < DateTime.Now.AddYears(-1).Date) throw new ArgumentException("Sale date cannot be more than 1 year in the past", nameof(sale));
 
             using var conn = DbConnectionManager.Instance.CreateConnection();
             conn.Open();

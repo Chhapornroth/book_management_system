@@ -225,21 +225,37 @@ namespace WindowsFormsApp.Forms
                     if (_role == "Admin")
                     {
                         var adminForm = new AdminForm(user);
-                        adminForm.ShowDialog();
-                        // When form closes (Back or Logout), show dashboard
-                        var dashboard = new DashboardForm();
-                        this.Close();
-                        dashboard.ShowDialog();
+                        var result = adminForm.ShowDialog();
+                        // Only show dashboard if user clicked Logout (OK), not if they closed with X
+                        if (result == DialogResult.OK)
+                        {
+                            var dashboard = new DashboardForm();
+                            this.Close();
+                            dashboard.ShowDialog();
+                        }
+                        else
+                        {
+                            // User closed with X button, just close the login form
+                            this.Close();
+                        }
                         return;
                     }
                     else
                     {
                         var cashierForm = new CashierForm(user);
-                        cashierForm.ShowDialog();
-                        // When form closes (Back or Logout), show dashboard
-                        var dashboard = new DashboardForm();
-                        this.Close();
-                        dashboard.ShowDialog();
+                        var result = cashierForm.ShowDialog();
+                        // Only show dashboard if user clicked Logout (OK), not if they closed with X
+                        if (result == DialogResult.OK)
+                        {
+                            var dashboard = new DashboardForm();
+                            this.Close();
+                            dashboard.ShowDialog();
+                        }
+                        else
+                        {
+                            // User closed with X button, just close the login form
+                            this.Close();
+                        }
                         return;
                     }
                 }

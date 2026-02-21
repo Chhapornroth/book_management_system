@@ -236,18 +236,19 @@ namespace WindowsFormsApp.Forms
             };
             txtSearchBooks.TextChanged += (s, e) => FilterBooks();
             
+            var lblId = new Label { Text = "ID", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(15, 25), AutoSize = true };
+            var lblTitle = new Label { Text = "Title", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(110, 25), AutoSize = true };
+            var lblAuthor = new Label { Text = "Author", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 25), AutoSize = true };
+            var lblStock = new Label { Text = "Stock", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(570, 25), AutoSize = true };
+            var lblDate = new Label { Text = "Date", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(680, 25), AutoSize = true };
+
             inputPanel.Controls.AddRange(new Control[] { 
                 inputTitle,
-                new Label { Text = "ID", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(15, 25), AutoSize = true },
-                txtBookId,
-                new Label { Text = "Title", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(110, 25), AutoSize = true },
-                txtBookTitle,
-                new Label { Text = "Author", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 25), AutoSize = true },
-                txtBookAuthor,
-                new Label { Text = "Stock", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(570, 25), AutoSize = true },
-                txtBookStock,
-                new Label { Text = "Date", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(680, 25), AutoSize = true },
-                dtpBookDate,
+                lblId, txtBookId,
+                lblTitle, txtBookTitle,
+                lblAuthor, txtBookAuthor,
+                lblStock, txtBookStock,
+                lblDate, dtpBookDate,
                 btnAddBook, btnUpdateBook, btnDeleteBook,
                 searchLabel,
                 txtSearchBooks
@@ -424,18 +425,19 @@ namespace WindowsFormsApp.Forms
             };
             txtSearchEmployees.TextChanged += (s, e) => FilterEmployees();
             
+            var lblEmpId = new Label { Text = "ID", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(15, 25), AutoSize = true };
+            var lblEmpName = new Label { Text = "Name", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(110, 25), AutoSize = true };
+            var lblEmpGender = new Label { Text = "Gender", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 25), AutoSize = true };
+            var lblEmpPhone = new Label { Text = "Phone", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(470, 25), AutoSize = true };
+            var lblEmpBirthday = new Label { Text = "Birthday", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(630, 25), AutoSize = true };
+
             inputPanel.Controls.AddRange(new Control[] {
                 inputTitle,
-                new Label { Text = "ID", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(15, 25), AutoSize = true },
-                txtEmployeeId,
-                new Label { Text = "Name", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(110, 25), AutoSize = true },
-                txtEmployeeName,
-                new Label { Text = "Gender", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(340, 25), AutoSize = true },
-                cmbEmployeeGender,
-                new Label { Text = "Phone", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(470, 25), AutoSize = true },
-                txtEmployeePhone,
-                new Label { Text = "Birthday", Font = new Font("Segoe UI", 9F), ForeColor = Color.FromArgb(127, 140, 141), Location = new Point(630, 25), AutoSize = true },
-                dtpEmployeeBirthday,
+                lblEmpId, txtEmployeeId,
+                lblEmpName, txtEmployeeName,
+                lblEmpGender, cmbEmployeeGender,
+                lblEmpPhone, txtEmployeePhone,
+                lblEmpBirthday, dtpEmployeeBirthday,
                 btnAddEmployee, btnUpdateEmployee, btnDeleteEmployee,
                 searchLabel,
                 txtSearchEmployees

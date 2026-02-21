@@ -66,19 +66,20 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 14F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(52, 73, 94),
                 AutoSize = true,
-                Location = new Point(0, 20)
+                Location = new Point(0, 30)
             };
 
             var adminButton = new Button
             {
                 Text = "👤 Admin",
                 Size = new Size(200, 80),
-                Location = new Point(50, 70),
+                Location = new Point(0, 80),
                 Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                 BackColor = Color.FromArgb(52, 152, 219),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.None
             };
             adminButton.FlatAppearance.BorderSize = 0;
             adminButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(41, 128, 185);
@@ -88,16 +89,29 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "💰 Cashier",
                 Size = new Size(200, 80),
-                Location = new Point(300, 70),
+                Location = new Point(0, 80),
                 Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                 BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.None
             };
             cashierButton.FlatAppearance.BorderSize = 0;
             cashierButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(39, 174, 96);
             cashierButton.Click += CashierButton_Click;
+
+            // Center buttons on resize and initial load
+            void CenterControls()
+            {
+                var centerX = contentPanel.Width / 2;
+                adminButton.Left = centerX - 225;
+                cashierButton.Left = centerX + 25;
+                roleLabel.Left = (contentPanel.Width - roleLabel.Width) / 2;
+            }
+
+            contentPanel.Resize += (s, e) => CenterControls();
+            contentPanel.Layout += (s, e) => CenterControls();
 
             contentPanel.Controls.Add(roleLabel);
             contentPanel.Controls.Add(adminButton);

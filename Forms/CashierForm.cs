@@ -188,11 +188,11 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(555, 45)
+                Location = new Point(445, 45)
             };
             txtQuantity = new TextBox 
             { 
-                Location = new Point(555, 65), 
+                Location = new Point(445, 65), 
                 Size = new Size(100, 32), 
                 PlaceholderText = "1",
                 Font = new Font("Segoe UI", 10F),
@@ -205,13 +205,13 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(15, 110)
+                Location = new Point(445, 110)
             };
             chk5Percent = new CheckBox 
             { 
                 Text = "5%", 
-                Location = new Point(15, 130), 
-                Size = new Size(70, 28),
+                Location = new Point(445, 130), 
+                Size = new Size(60, 28),
                 Font = new Font("Segoe UI", 10F),
                 Appearance = Appearance.Button,
                 FlatStyle = FlatStyle.Flat
@@ -220,8 +220,8 @@ namespace WindowsFormsApp.Forms
             chk10Percent = new CheckBox 
             { 
                 Text = "10%", 
-                Location = new Point(95, 130), 
-                Size = new Size(70, 28),
+                Location = new Point(515, 130), 
+                Size = new Size(60, 28),
                 Font = new Font("Segoe UI", 10F),
                 Appearance = Appearance.Button,
                 FlatStyle = FlatStyle.Flat
@@ -230,8 +230,8 @@ namespace WindowsFormsApp.Forms
             chk20Percent = new CheckBox 
             { 
                 Text = "20%", 
-                Location = new Point(175, 130), 
-                Size = new Size(70, 28),
+                Location = new Point(585, 130), 
+                Size = new Size(60, 28),
                 Font = new Font("Segoe UI", 10F),
                 Appearance = Appearance.Button,
                 FlatStyle = FlatStyle.Flat
@@ -245,8 +245,8 @@ namespace WindowsFormsApp.Forms
             btnAddToCart = new Button 
             { 
                 Text = "➕ Add to Cart", 
-                Location = new Point(260, 130), 
-                Size = new Size(130, 38),
+                Location = new Point(15, 130), 
+                Size = new Size(120, 38),
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
@@ -260,8 +260,8 @@ namespace WindowsFormsApp.Forms
             btnProcessSale = new Button 
             { 
                 Text = "💳 Process Sale", 
-                Location = new Point(400, 130), 
-                Size = new Size(130, 38),
+                Location = new Point(145, 130), 
+                Size = new Size(120, 38),
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(52, 152, 219),
                 ForeColor = Color.White,
@@ -275,7 +275,7 @@ namespace WindowsFormsApp.Forms
             btnClearCart = new Button 
             { 
                 Text = "🗑️ Clear Cart", 
-                Location = new Point(540, 130), 
+                Location = new Point(275, 130), 
                 Size = new Size(120, 38),
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 196, 15),
@@ -315,6 +315,9 @@ namespace WindowsFormsApp.Forms
                 btnAddToCart, btnProcessSale, btnClearCart,
                 totalLabel, lblTotal
             });
+            
+            // Adjust input panel height to fit all controls
+            inputPanel.Height = 250;
 
             // Cart DataGridView
             dgvCart = new DataGridView

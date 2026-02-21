@@ -73,6 +73,8 @@ namespace WindowsFormsApp.Forms
                 Padding = new Padding(40, 30, 40, 30)
             };
 
+            var inputWidth = 350;
+
             var lblFullName = new Label
             {
                 Text = "Full Name",
@@ -85,12 +87,13 @@ namespace WindowsFormsApp.Forms
             txtFullName = new TextBox
             {
                 PlaceholderText = "Enter your full name",
-                Size = new Size(350, 35),
+                Size = new Size(inputWidth, 35),
                 Location = new Point(0, 45),
                 Font = new Font("Segoe UI", 11F),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
-                Padding = new Padding(10, 0, 0, 0)
+                Padding = new Padding(10, 0, 0, 0),
+                Anchor = AnchorStyles.None
             };
 
             var lblPhone = new Label
@@ -105,29 +108,45 @@ namespace WindowsFormsApp.Forms
             txtPassword = new TextBox
             {
                 PlaceholderText = "Enter your phone number",
-                Size = new Size(350, 35),
+                Size = new Size(inputWidth, 35),
                 Location = new Point(0, 125),
                 Font = new Font("Segoe UI", 11F),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 UseSystemPasswordChar = false,
-                Padding = new Padding(10, 0, 0, 0)
+                Padding = new Padding(10, 0, 0, 0),
+                Anchor = AnchorStyles.None
             };
 
             btnLogin = new Button
             {
                 Text = "Sign In",
-                Size = new Size(350, 45),
+                Size = new Size(inputWidth, 45),
                 Location = new Point(0, 190),
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BackColor = _role == "Admin" ? Color.FromArgb(52, 152, 219) : Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.None
             };
             btnLogin.FlatAppearance.BorderSize = 0;
             btnLogin.FlatAppearance.MouseOverBackColor = _role == "Admin" ? Color.FromArgb(41, 128, 185) : Color.FromArgb(39, 174, 96);
             btnLogin.Click += BtnLogin_Click;
+
+            // Center all controls
+            void CenterControls()
+            {
+                var centerX = (contentPanel.Width - inputWidth) / 2;
+                lblFullName.Left = centerX;
+                txtFullName.Left = centerX;
+                lblPhone.Left = centerX;
+                txtPassword.Left = centerX;
+                btnLogin.Left = centerX;
+            }
+
+            contentPanel.Resize += (s, e) => CenterControls();
+            contentPanel.Layout += (s, e) => CenterControls();
 
             contentPanel.Controls.Add(lblFullName);
             contentPanel.Controls.Add(txtFullName);

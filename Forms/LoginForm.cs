@@ -101,9 +101,9 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "Full Name",
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94),
+                ForeColor = Color.FromArgb(44, 62, 80),
                 AutoSize = true,
-                Location = new Point(0, 10),
+                Location = new Point(50, 10),
                 BackColor = Color.Transparent
             };
 
@@ -111,7 +111,7 @@ namespace WindowsFormsApp.Forms
             {
                 PlaceholderText = "Enter your full name",
                 Size = new Size(inputWidth, 38),
-                Location = new Point(0, 38),
+                Location = new Point(50, 38),
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
@@ -123,9 +123,9 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "Phone Number",
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94),
+                ForeColor = Color.FromArgb(44, 62, 80),
                 AutoSize = true,
-                Location = new Point(0, 90),
+                Location = new Point(50, 90),
                 BackColor = Color.Transparent
             };
 
@@ -133,7 +133,7 @@ namespace WindowsFormsApp.Forms
             {
                 PlaceholderText = "Enter your phone number",
                 Size = new Size(inputWidth, 38),
-                Location = new Point(0, 118),
+                Location = new Point(50, 118),
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
@@ -146,7 +146,7 @@ namespace WindowsFormsApp.Forms
             {
                 Text = "Sign In",
                 Size = new Size(inputWidth, 48),
-                Location = new Point(0, 170),
+                Location = new Point(50, 170),
                 Font = new Font("Segoe UI", 13F, FontStyle.Bold),
                 BackColor = _role == "Admin" ? Color.FromArgb(52, 152, 219) : Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
@@ -173,9 +173,6 @@ namespace WindowsFormsApp.Forms
             }
 
             contentPanel.Resize += (s, e) => CenterControls();
-            
-            // Initial centering
-            contentPanel.Shown += (s, e) => CenterControls();
 
             contentPanel.Controls.Add(lblFullName);
             contentPanel.Controls.Add(txtFullName);
@@ -185,6 +182,9 @@ namespace WindowsFormsApp.Forms
 
             this.Controls.Add(headerPanel);
             this.Controls.Add(contentPanel);
+            
+            // Initial centering after form is shown
+            this.Shown += (s, e) => CenterControls();
         }
 
         private void BtnLogin_Click(object sender, EventArgs e)

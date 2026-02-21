@@ -20,8 +20,8 @@ namespace WindowsFormsApp.Forms
         private TextBox txtEmployeeName, txtEmployeePhone, txtEmployeeId;
         private DateTimePicker dtpBookDate, dtpEmployeeBirthday;
         private ComboBox cmbEmployeeGender;
-        private Button btnAddBook, btnUpdateBook, btnDeleteBook;
-        private Button btnAddEmployee, btnUpdateEmployee, btnDeleteEmployee;
+        private Button btnAddBook, btnUpdateBook, btnDeleteBook, btnClearBook;
+        private Button btnAddEmployee, btnUpdateEmployee, btnDeleteEmployee, btnClearEmployee;
         private Button btnDeleteSale, btnLogout;
         private TextBox txtSearchBooks, txtSearchEmployees, txtSearchSales;
         private readonly BookRepository _bookRepo = new();
@@ -233,6 +233,21 @@ namespace WindowsFormsApp.Forms
             btnDeleteBook.FlatAppearance.BorderSize = 0;
             btnDeleteBook.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
             
+            btnClearBook = new Button 
+            { 
+                Text = "🧹 Clear", 
+                Location = new Point(345, 125), 
+                Size = new Size(100, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                BackColor = Color.FromArgb(155, 89, 182),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnClearBook.FlatAppearance.BorderSize = 0;
+            btnClearBook.FlatAppearance.MouseOverBackColor = Color.FromArgb(142, 68, 173);
+            btnClearBook.Click += (s, e) => ClearBookForm();
+            
             btnAddBook.Click += BtnAddBook_Click;
             btnUpdateBook.Click += BtnUpdateBook_Click;
             btnDeleteBook.Click += BtnDeleteBook_Click;
@@ -263,7 +278,7 @@ namespace WindowsFormsApp.Forms
                 lblAuthor, txtBookAuthor,
                 lblStock, txtBookStock,
                 lblDate, dtpBookDate,
-                btnAddBook, btnUpdateBook, btnDeleteBook,
+                btnAddBook, btnUpdateBook, btnDeleteBook, btnClearBook,
                 searchLabel,
                 txtSearchBooks
             });
@@ -429,6 +444,21 @@ namespace WindowsFormsApp.Forms
             btnDeleteEmployee.FlatAppearance.BorderSize = 0;
             btnDeleteEmployee.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
             
+            btnClearEmployee = new Button 
+            { 
+                Text = "🧹 Clear", 
+                Location = new Point(345, 125), 
+                Size = new Size(100, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                BackColor = Color.FromArgb(155, 89, 182),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnClearEmployee.FlatAppearance.BorderSize = 0;
+            btnClearEmployee.FlatAppearance.MouseOverBackColor = Color.FromArgb(142, 68, 173);
+            btnClearEmployee.Click += (s, e) => ClearEmployeeForm();
+            
             btnAddEmployee.Click += BtnAddEmployee_Click;
             btnUpdateEmployee.Click += BtnUpdateEmployee_Click;
             btnDeleteEmployee.Click += BtnDeleteEmployee_Click;
@@ -459,7 +489,7 @@ namespace WindowsFormsApp.Forms
                 lblEmpGender, cmbEmployeeGender,
                 lblEmpPhone, txtEmployeePhone,
                 lblEmpBirthday, dtpEmployeeBirthday,
-                btnAddEmployee, btnUpdateEmployee, btnDeleteEmployee,
+                btnAddEmployee, btnUpdateEmployee, btnDeleteEmployee, btnClearEmployee,
                 searchLabel,
                 txtSearchEmployees
             });

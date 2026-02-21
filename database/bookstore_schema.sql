@@ -83,25 +83,33 @@ CREATE INDEX idx_sales_book ON sales(book_id);
 
 -- Insert Sample Employees
 INSERT INTO employees (name, gender, phone_number, birthday) VALUES
-('YIN CHHAPORNROTH', 'Male', '069305880', '2004-09-15'),
-('John Doe', 'Male', '1234567890', '1990-01-15'),
-('Jane Smith', 'Female', '0987654321', '1992-05-20');
+('YIN_CHHAPORNROTH', 'Male', '069305880', '2004-09-15');
 
 -- Insert Sample Books
 INSERT INTO books (title, author_name, stock, adding_date) VALUES
-('Think and Grow Rich', 'Napoleon Hill', 4, '2024-03-03'),
-('Everything Is F***ed', 'Mark Manson', 5, '2024-05-15'),
-('What You Think of Me is None of My Business', 'Terry Cole-Whittaker', 5, '2024-12-24'),
-('The 7 Habits of Highly Effective People', 'Stephen R. Covey', 10, '2024-01-10'),
-('Atomic Habits', 'James Clear', 8, '2024-02-20');
+('Think and Grow Rich', 'Napoleon Hill', 4, NOW()),
+('Everything Is F***ed', 'Mark Manson', 5, NOW()),
+('What You Think of Me is None of My Business', 'Terry Cole-Whittaker', 5, NOW()),
+('The 7 Habits of Highly Effective People', 'Stephen R. Covey', 10, NOW()),
+('Atomic Habits', 'James Clear', 8, NOW()
+('Deep Work', 'Cal Newport', 6, NOW()),
+('The Psychology of Money', 'Morgan Housel', 9, NOW()),
+('The Subtle Art of Not Giving a F*ck', 'Mark Manson', 7, NOW()),
+('Rich Dad Poor Dad', 'Robert T. Kiyosaki', 12, NOW()),
+('The Power of Habit', 'Charles Duhigg', 5, NOW()),
+('Start With Why', 'Simon Sinek', 4, NOW()),
+('The Alchemist', 'Paulo Coelho', 15, NOW()),
+('Can''t Hurt Me', 'David Goggins', 6, NOW()),
+('Mindset', 'Carol S. Dweck', 8, NOW()),
+('The Lean Startup', 'Eric Ries', 7, NOW());
 
 -- Insert Sample Sales
 INSERT INTO sales (customer_name, book_id, employee_id, price, quantity, discount, sale_date) VALUES
-('Sebastian', 3, 1, 15.00, 2, 0.05, '2024-08-18'),
-('Tom', 2, 2, 10.00, 2, 0.00, '2024-08-18'),
-('Alfia', 1, 2, 20.00, 3, 0.20, '2024-08-18'),
-('Sarah', 4, 1, 25.00, 1, 0.10, '2024-08-19'),
-('Mike', 5, 3, 18.00, 2, 0.00, '2024-08-19');
+('Sebastian', 3, 1, 15.00, 2, 0.05, '2026-02-20'),
+('Tom', 2, 2, 10.00, 2, 0.00, '2026-02-21'),
+('Alfia', 1, 2, 20.00, 3, 0.20, '2026-02-21'),
+('Sarah', 4, 1, 25.00, 1, 0.10, '2026-02-21'),
+('Mike', 5, 3, 18.00, 2, 0.00, '2026-02-21');
 
 -- =====================================================
 -- Views for Common Queries

@@ -91,7 +91,7 @@ namespace WindowsFormsApp.Forms
             };
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
-            btnLogout.Click += BtnLogout_Click;
+            btnLogout.Click += (s, e) => { this.Close(); new DashboardForm().Show(); };
 
             headerPanel.Controls.Add(welcomeLabel);
             headerPanel.Controls.Add(btnBack);
@@ -1387,23 +1387,6 @@ namespace WindowsFormsApp.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Error filtering sales: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void BtnLogout_Click(object sender, EventArgs e)
-        {
-            var result = MessageBox.Show(
-                "Are you sure you want to logout?",
-                "Confirm Logout",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-
-            if (result == DialogResult.Yes)
-            {
-                this.Hide();
-                new DashboardForm().Show();
-                this.Close();
             }
         }
     }

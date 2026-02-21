@@ -22,7 +22,7 @@ namespace WindowsFormsApp.Forms
         private ComboBox cmbEmployeeGender;
         private Button btnAddBook, btnUpdateBook, btnDeleteBook;
         private Button btnAddEmployee, btnUpdateEmployee, btnDeleteEmployee;
-        private Button btnDeleteSale, btnLogout, btnBack;
+        private Button btnDeleteSale, btnLogout;
         private TextBox txtSearchBooks, txtSearchEmployees, txtSearchSales;
         private readonly BookRepository _bookRepo = new();
         private readonly EmployeeRepository _employeeRepo = new();
@@ -61,25 +61,6 @@ namespace WindowsFormsApp.Forms
                 Location = new Point(20, 20)
             };
 
-            btnBack = new Button
-            {
-                Text = "⬅️ Back",
-                Size = new Size(120, 40),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                BackColor = Color.FromArgb(149, 165, 166),
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand
-            };
-            btnBack.FlatAppearance.BorderSize = 0;
-            btnBack.FlatAppearance.MouseOverBackColor = Color.FromArgb(127, 140, 141);
-            btnBack.Click += (s, e) => 
-            { 
-                this.DialogResult = DialogResult.Cancel;
-                this.Close();
-            };
-
             btnLogout = new Button
             {
                 Text = "🚪 Logout",
@@ -99,18 +80,25 @@ namespace WindowsFormsApp.Forms
                 this.Close();
             };
             
-            // Position buttons on the right side
-            void PositionButtons()
+            // Position logout button on the right side
+            void PositionLogoutButton()
             {
                 btnLogout.Location = new Point(headerPanel.Width - btnLogout.Width - 15, 15);
-                btnBack.Location = new Point(headerPanel.Width - btnLogout.Width - btnBack.Width - 25, 15);
             }
             
-            this.Shown += (s, e) => PositionButtons();
-            headerPanel.Resize += (s, e) => PositionButtons();
+            this.Shown += (s, e) => PositionLogoutButton();
+            headerPanel.Resize += (s, e) => PositionLogoutButton();
+            
+            // Handle form closing (X button) to show dashboard
+            this.FormClosing += (s, e) =>
+            {
+                if (this.DialogResult == DialogResult.None)
+                {
+                    this.DialogResult = DialogResult.Cancel;
+                }
+            };
 
             headerPanel.Controls.Add(welcomeLabel);
-            headerPanel.Controls.Add(btnBack);
             headerPanel.Controls.Add(btnLogout);
 
             // Tab Control with modern styling

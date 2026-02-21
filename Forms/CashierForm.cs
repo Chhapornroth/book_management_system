@@ -18,9 +18,11 @@ namespace WindowsFormsApp.Forms
     public partial class CashierForm : Form
     {
         private TextBox txtCustomerName, txtPrice, txtQuantity, txtBookSearch;
+        private TextBox txtSearchBooks, txtSearchSales;
         private ListBox lstBookResults;
         private Panel pnlBookSearch;
         private List<Book> _allBooks = new();
+        private List<Sale> _allSales = new();
         private CheckBox chk5Percent, chk10Percent, chk20Percent;
         private DataGridView dgvCart, dgvBooks, dgvSales;
         private Label lblTotal;
@@ -439,6 +441,36 @@ namespace WindowsFormsApp.Forms
         {
             var panel = new Panel { Dock = DockStyle.Fill, BackColor = Color.FromArgb(245, 247, 250), Padding = new Padding(15) };
             
+            var searchPanel = new Panel 
+            { 
+                Height = 70, 
+                Dock = DockStyle.Top, 
+                BackColor = Color.White,
+                Padding = new Padding(15)
+            };
+
+            var searchLabel = new Label
+            {
+                Text = "🔍 Search:",
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94),
+                AutoSize = true,
+                Location = new Point(15, 20)
+            };
+            
+            txtSearchBooks = new TextBox 
+            { 
+                Location = new Point(120, 17), 
+                Size = new Size(500, 35), 
+                PlaceholderText = "Search by book ID, title, author, stock...",
+                Font = new Font("Segoe UI", 12F),
+                BorderStyle = BorderStyle.FixedSingle
+            };
+            txtSearchBooks.TextChanged += (s, e) => FilterBooks();
+
+            searchPanel.Controls.Add(searchLabel);
+            searchPanel.Controls.Add(txtSearchBooks);
+            
             dgvBooks = new DataGridView
             {
                 Dock = DockStyle.Fill,
@@ -479,12 +511,43 @@ namespace WindowsFormsApp.Forms
             };
             
             panel.Controls.Add(dgvBooks);
+            panel.Controls.Add(searchPanel);
             tab.Controls.Add(panel);
         }
 
         private void CreateSalesTab(TabPage tab)
         {
             var panel = new Panel { Dock = DockStyle.Fill, BackColor = Color.FromArgb(245, 247, 250), Padding = new Padding(15) };
+            
+            var searchPanel = new Panel 
+            { 
+                Height = 70, 
+                Dock = DockStyle.Top, 
+                BackColor = Color.White,
+                Padding = new Padding(15)
+            };
+
+            var searchLabel = new Label
+            {
+                Text = "🔍 Search:",
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(52, 73, 94),
+                AutoSize = true,
+                Location = new Point(15, 20)
+            };
+            
+            txtSearchSales = new TextBox 
+            { 
+                Location = new Point(120, 17), 
+                Size = new Size(500, 35), 
+                PlaceholderText = "Search by sale ID, customer name, book ID, date...",
+                Font = new Font("Segoe UI", 12F),
+                BorderStyle = BorderStyle.FixedSingle
+            };
+            txtSearchSales.TextChanged += (s, e) => FilterSales();
+
+            searchPanel.Controls.Add(searchLabel);
+            searchPanel.Controls.Add(txtSearchSales);
             
             dgvSales = new DataGridView
             {
@@ -526,6 +589,7 @@ namespace WindowsFormsApp.Forms
             };
             
             panel.Controls.Add(dgvSales);
+            panel.Controls.Add(searchPanel);
             tab.Controls.Add(panel);
             LoadSales();
         }
@@ -551,6 +615,43 @@ namespace WindowsFormsApp.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading books: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void FilterBooks()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtSearchBooks?.Text))
+                {
+                    LoadBooks();
+                    return;
+                }
+
+                var searchText = txtSearchBooks.Text.ToLower();
+                var filtered = _allBooks.Where(b => 
+                    b.BookId.ToString().Contains(searchText) ||
+                    b.Title.ToLower().Contains(searchText) ||
+                    b.AuthorName.ToLower().Contains(searchText) ||
+                    b.Stock.ToString().Contains(searchText) ||
+                    b.AddingDate.ToShortDateString().ToLower().Contains(searchText)
+                ).ToList();
+
+                if (dgvBooks != null)
+                {
+                    dgvBooks.DataSource = filtered.Select(b => new
+                    {
+                        b.BookId,
+                        b.Title,
+                        b.AuthorName,
+                        b.Stock,
+                        AddingDate = b.AddingDate.ToShortDateString()
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error filtering books: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         
@@ -592,10 +693,10 @@ namespace WindowsFormsApp.Forms
         {
             try
             {
-                var sales = _saleRepo.GetAllSales().Where(s => s.EmployeeId == _currentUser.Id).ToList();
+                _allSales = _saleRepo.GetAllSales().Where(s => s.EmployeeId == _currentUser.Id).ToList();
                 if (dgvSales != null)
                 {
-                    dgvSales.DataSource = sales.Select(s => new
+                    dgvSales.DataSource = _allSales.Select(s => new
                     {
                         s.SaleId,
                         s.CustomerName,
@@ -611,6 +712,48 @@ namespace WindowsFormsApp.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading sales: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void FilterSales()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtSearchSales?.Text))
+                {
+                    LoadSales();
+                    return;
+                }
+
+                var searchText = txtSearchSales.Text.ToLower();
+                var filtered = _allSales.Where(s => 
+                    s.SaleId.ToString().Contains(searchText) ||
+                    s.CustomerName.ToLower().Contains(searchText) ||
+                    s.BookId.ToString().Contains(searchText) ||
+                    s.Price.ToString().Contains(searchText) ||
+                    s.Quantity.ToString().Contains(searchText) ||
+                    s.Total.ToString().Contains(searchText) ||
+                    s.SaleDate.ToShortDateString().ToLower().Contains(searchText)
+                ).ToList();
+
+                if (dgvSales != null)
+                {
+                    dgvSales.DataSource = filtered.Select(s => new
+                    {
+                        s.SaleId,
+                        s.CustomerName,
+                        s.BookId,
+                        Price = s.Price.ToString("C"),
+                        s.Quantity,
+                        Discount = (s.Discount * 100).ToString("F0") + "%",
+                        Total = s.Total.ToString("C"),
+                        SaleDate = s.SaleDate.ToShortDateString()
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error filtering sales: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

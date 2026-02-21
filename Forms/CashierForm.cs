@@ -693,7 +693,7 @@ namespace WindowsFormsApp.Forms
         {
             try
             {
-                _allSales = _saleRepo.GetAllSales().Where(s => s.EmployeeId == _currentUser.Id).ToList();
+                _allSales = _saleRepo.GetAllSales().ToList();
                 if (dgvSales != null)
                 {
                     dgvSales.DataSource = _allSales.Select(s => new
@@ -701,6 +701,7 @@ namespace WindowsFormsApp.Forms
                         s.SaleId,
                         s.CustomerName,
                         s.BookId,
+                        s.EmployeeId,
                         Price = s.Price.ToString("C"),
                         s.Quantity,
                         Discount = (s.Discount * 100).ToString("F0") + "%",
@@ -730,6 +731,7 @@ namespace WindowsFormsApp.Forms
                     s.SaleId.ToString().Contains(searchText) ||
                     s.CustomerName.ToLower().Contains(searchText) ||
                     s.BookId.ToString().Contains(searchText) ||
+                    s.EmployeeId.ToString().Contains(searchText) ||
                     s.Price.ToString().Contains(searchText) ||
                     s.Quantity.ToString().Contains(searchText) ||
                     s.Total.ToString().Contains(searchText) ||
@@ -743,6 +745,7 @@ namespace WindowsFormsApp.Forms
                         s.SaleId,
                         s.CustomerName,
                         s.BookId,
+                        s.EmployeeId,
                         Price = s.Price.ToString("C"),
                         s.Quantity,
                         Discount = (s.Discount * 100).ToString("F0") + "%",

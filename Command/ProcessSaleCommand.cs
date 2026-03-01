@@ -80,8 +80,9 @@ namespace WindowsFormsApp.Command
                         continue;
                     }
 
-                    // Add sale to repository
-                    _saleRepo.AddSale(sale);
+                    // Add sale to repository and get the generated sale ID
+                    var saleId = _saleRepo.AddSale(sale);
+                    sale.SaleId = saleId; // Set the ID for undo functionality
                     _processedSales.Add(sale);
                     _processedItems.Add(item);
 

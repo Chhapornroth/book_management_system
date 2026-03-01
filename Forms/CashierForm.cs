@@ -26,7 +26,7 @@ namespace WindowsFormsApp.Forms
         private CheckBox chk5Percent, chk10Percent, chk20Percent;
         private DataGridView dgvCart, dgvBooks, dgvSales;
         private Label lblTotal;
-        private Button btnAddToCart, btnProcessSale, btnClearCart, btnClearInput, btnLogout;
+        private Button btnAddToCart, btnProcessSale, btnUndo, btnClearCart, btnClearInput, btnLogout;
         private TabControl tabControl;
         private decimal _currentTotal = 0;
         private readonly BookRepository _bookRepo = new();
@@ -42,6 +42,7 @@ namespace WindowsFormsApp.Forms
             _saleNotifier.Attach(new LoggingSaleObserver());
             InitializeComponent();
             LoadBooks();
+            UpdateUndoButtonState(); // Initialize undo button state
         }
 
         private void InitializeComponent()
@@ -326,10 +327,26 @@ namespace WindowsFormsApp.Forms
             btnProcessSale.FlatAppearance.MouseOverBackColor = Color.FromArgb(41, 128, 185);
             btnProcessSale.Click += BtnProcessSale_Click;
 
+            btnUndo = new Button 
+            { 
+                Text = "↶ Undo Last Sale", 
+                Location = new Point(315, 143), 
+                Size = new Size(140, 40),
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                BackColor = Color.FromArgb(230, 126, 34),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Enabled = false // Initially disabled until a sale is processed
+            };
+            btnUndo.FlatAppearance.BorderSize = 0;
+            btnUndo.FlatAppearance.MouseOverBackColor = Color.FromArgb(211, 84, 0);
+            btnUndo.Click += BtnUndo_Click;
+
             btnClearCart = new Button 
             { 
                 Text = "🗑️ Clear Cart", 
-                Location = new Point(315, 143), 
+                Location = new Point(465, 143), 
                 Size = new Size(140, 40),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(241, 196, 15),
@@ -344,7 +361,7 @@ namespace WindowsFormsApp.Forms
             btnClearInput = new Button 
             { 
                 Text = "🧹 Clear Input", 
-                Location = new Point(465, 143), 
+                Location = new Point(615, 143), 
                 Size = new Size(140, 40),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 BackColor = Color.FromArgb(155, 89, 182),
@@ -381,7 +398,7 @@ namespace WindowsFormsApp.Forms
                 lblPrice, txtPrice,
                 lblQuantity, txtQuantity,
                 lblDiscount, chk5Percent, chk10Percent, chk20Percent,
-                btnAddToCart, btnProcessSale, btnClearCart, btnClearInput,
+                btnAddToCart, btnProcessSale, btnUndo, btnClearCart, btnClearInput,
                 totalLabel, lblTotal
             });
             
@@ -963,6 +980,64 @@ namespace WindowsFormsApp.Forms
             LoadBooks();
             LoadSales();
             ClearForm();
+            
+            // Enable undo button after successful sale processing
+            UpdateUndoButtonState();
+        }
+
+        private void BtnUndo_Click(object sender, EventArgs e)
+        {
+            if (!_commandInvoker.CanUndo)
+            {
+                MessageBox.Show("No sale to undo.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "Are you sure you want to undo the last sale?\nThis will restore stock and remove the sale from records.",
+                "Confirm Undo",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                bool success = _commandInvoker.UndoLastCommand();
+                
+                if (success)
+                {
+                    MessageBox.Show("Sale undone successfully! Stock has been restored.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
+                    // Refresh data to reflect changes
+                    LoadBooks();
+                    LoadSales();
+                    UpdateUndoButtonState();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to undo the sale. Please check the logs.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void UpdateUndoButtonState()
+        {
+            if (btnUndo != null)
+            {
+                btnUndo.Enabled = _commandInvoker.CanUndo;
+                
+                // Update button appearance based on state
+                if (btnUndo.Enabled)
+                {
+                    btnUndo.BackColor = Color.FromArgb(230, 126, 34);
+                    btnUndo.Text = $"↶ Undo Last Sale ({_commandInvoker.HistoryCount})";
+                }
+                else
+                {
+                    btnUndo.BackColor = Color.FromArgb(149, 165, 166);
+                    btnUndo.Text = "↶ Undo Last Sale";
+                }
+            }
         }
 
         private void BtnClearCart_Click(object sender, EventArgs e)

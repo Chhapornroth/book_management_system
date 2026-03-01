@@ -882,7 +882,7 @@ namespace WindowsFormsApp.Forms
 
             _cartItems.Add(item);
             UpdateCartDisplay();
-            ClearForm();
+            ClearItemFields(); // Clear only item fields, keep customer name
         }
 
         private void UpdateCartDisplay()
@@ -1096,6 +1096,18 @@ namespace WindowsFormsApp.Forms
         private void ClearForm()
         {
             txtCustomerName.Clear();
+            txtBookSearch.Clear();
+            txtPrice.Clear();
+            txtQuantity.Clear();
+            chk5Percent.Checked = false;
+            chk10Percent.Checked = false;
+            chk20Percent.Checked = false;
+            if (pnlBookSearch != null) pnlBookSearch.Visible = false;
+        }
+
+        private void ClearItemFields()
+        {
+            // Clear only item-related fields, keep customer name
             txtBookSearch.Clear();
             txtPrice.Clear();
             txtQuantity.Clear();

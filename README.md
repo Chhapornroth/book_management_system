@@ -9,7 +9,7 @@ A professional C# Windows Forms application for managing a bookstore with Postgr
 - **Cashier POS System** - Point of sale with discount calculation
 - **Sales Management** - Track all transactions and sales history
 - **PostgreSQL Database** - Robust database backend with proper relationships
-- **Design Patterns** - Implements 5+ design patterns (Singleton, Factory, Builder, Command, Observer)
+- **Design Patterns** - Implements 6 design patterns (Singleton, Factory, Builder, Command, Observer, Facade)
 
 ## 📋 Requirements
 
@@ -46,6 +46,7 @@ See `database/README.md` for detailed setup instructions.
 ├── Builder/         # Builder pattern (SaleBuilder)
 ├── Command/         # Command pattern (Sale processing commands)
 ├── Observer/        # Observer pattern (Sale notifications)
+├── Facade/          # Facade pattern (Sale processing facade)
 ├── Singleton/       # Singleton pattern (Database connection)
 ├── Forms/           # Windows Forms UI
 └── database/        # PostgreSQL schema and scripts
@@ -58,6 +59,7 @@ See `database/README.md` for detailed setup instructions.
 3. **Builder Pattern** - `SaleBuilder` for constructing sale objects step-by-step
 4. **Command Pattern** - `ICommand` and `ProcessSaleCommand` for encapsulating sale operations with undo support
 5. **Observer Pattern** - `ISaleObserver` for notifying when sales are created
+6. **Facade Pattern** - `SaleProcessingFacade` for simplifying complex sale processing operations
 
 ## 🚀 How to Run
 

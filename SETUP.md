@@ -260,6 +260,8 @@ CSharpe/
 │   ├── ISaleObserver.cs
 │   ├── SaleNotifier.cs
 │   └── LoggingSaleObserver.cs
+├── Facade/                  # Facade Pattern
+│   └── SaleProcessingFacade.cs
 ├── database/                # Database Scripts
 │   ├── bookstore_schema.sql
 │   └── create_tables.sql

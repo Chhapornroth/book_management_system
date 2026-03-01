@@ -18,12 +18,13 @@ This is a **fully functional** C# Windows Forms BookStore Management System with
 - **SaleRepository** - Sales transaction management
 - All use parameterized queries for security
 
-### ✅ Design Patterns (5+ Implemented)
+### ✅ Design Patterns (6 Implemented)
 1. **Singleton** - `DbConnectionManager` for database connections
 2. **Factory** - `UserFactory` creates Admin/Cashier users
 3. **Builder** - `SaleBuilder` constructs sale objects step-by-step
 4. **Command** - `ICommand` and `ProcessSaleCommand` for encapsulating sale operations with undo support
 5. **Observer** - `ISaleObserver` notifies when sales are created
+6. **Facade** - `SaleProcessingFacade` simplifies complex sale processing operations
 
 ### ✅ Database Schema
 - Complete PostgreSQL schema with sample data
@@ -94,6 +95,7 @@ dotnet run
 ├── Builder/         # SaleBuilder pattern
 ├── Command/         # Command pattern for sale operations
 ├── Observer/         # Sale observer pattern
+├── Facade/          # Facade pattern for sale processing
 ├── Singleton/       # Database connection manager
 └── database/        # PostgreSQL schema and scripts
 ```

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using WindowsFormsApp.Builder;
 using WindowsFormsApp.Command;
 using WindowsFormsApp.Data;
+using WindowsFormsApp.Facade;
 using WindowsFormsApp.Models;
 using WindowsFormsApp.Observer;
 
@@ -40,6 +41,15 @@ namespace WindowsFormsApp.Forms
         {
             _currentUser = user;
             _saleNotifier.Attach(new LoggingSaleObserver());
+            
+            // Initialize Facade Pattern - simplifies sale processing
+            _saleProcessingFacade = new SaleProcessingFacade(
+                _bookRepo,
+                _saleRepo,
+                _saleNotifier,
+                _commandInvoker
+            );
+            
             InitializeComponent();
             LoadBooks();
             UpdateUndoButtonState(); // Initialize undo button state
@@ -932,38 +942,8 @@ namespace WindowsFormsApp.Forms
 
         private void BtnProcessSale_Click(object sender, EventArgs e)
         {
-            if (_cartItems.Count == 0)
-            {
-                MessageBox.Show("Cart is empty", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtCustomerName.Text))
-            {
-                MessageBox.Show("Please enter customer name", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Validate stock availability for all items before processing
-            foreach (var item in _cartItems)
-            {
-                var book = _bookRepo.GetBookById(item.BookId);
-                if (book == null)
-                {
-                    MessageBox.Show($"Book ID {item.BookId} not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                if (book.Stock < item.Quantity)
-                {
-                    MessageBox.Show($"Insufficient stock for '{book.Title}'! Available: {book.Stock}, Requested: {item.Quantity}", "Stock Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-            }
-
-            // Use Command Pattern to process sales
-            // Convert CartItem to CartItemData for command
-            var cartItemData = _cartItems.Select(item => new WindowsFormsApp.Command.CartItemData
+            // Use Facade Pattern - simplified interface to complex sale processing
+            var facadeCartItems = _cartItems.Select(item => new WindowsFormsApp.Facade.CartItem
             {
                 BookId = item.BookId,
                 Title = item.Title,
@@ -972,42 +952,28 @@ namespace WindowsFormsApp.Forms
                 Discount = item.Discount
             }).ToList();
 
-            var processSaleCommand = new ProcessSaleCommand(
+            var result = _saleProcessingFacade.ProcessSale(
                 txtCustomerName.Text,
-                cartItemData,
-                _currentUser.Id,
-                _bookRepo,
-                _saleRepo,
-                _saleNotifier
+                facadeCartItems,
+                _currentUser.Id
             );
 
-            bool success = _commandInvoker.ExecuteCommand(processSaleCommand);
-
-            if (!success || processSaleCommand.ProcessedCount == 0)
+            // Handle result
+            if (!result.Success)
             {
-                MessageBox.Show("No items were processed. Please check stock availability.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Report results
-            var processedItems = processSaleCommand.GetProcessedItems();
-            var failedCount = processSaleCommand.FailedCount;
-
-            if (failedCount > 0)
+            // Show warnings for failed items
+            if (result.FailedCount > 0 && result.FailedItems.Count > 0)
             {
-                var failedItems = _cartItems.Where(item => 
-                    !processedItems.Any(pi => pi.BookId == item.BookId && pi.Quantity == item.Quantity)).ToList();
-                
-                var message = $"Some items could not be processed:\n";
-                foreach (var item in failedItems)
-                {
-                    message += $"- {item.Title} (Qty: {item.Quantity})\n";
-                }
+                var message = "Some items could not be processed:\n" + string.Join("\n", result.FailedItems.Select(item => $"- {item}"));
                 MessageBox.Show(message, "Partial Success", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             // Remove processed items from cart
-            foreach (var processedItem in processedItems)
+            foreach (var processedItem in result.ProcessedItems)
             {
                 var itemToRemove = _cartItems.FirstOrDefault(i => 
                     i.BookId == processedItem.BookId && 
@@ -1019,15 +985,14 @@ namespace WindowsFormsApp.Forms
                 }
             }
 
-            MessageBox.Show($"Sale processed successfully! {processSaleCommand.ProcessedCount} item(s) processed. Total: {_currentTotal:C}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
-            _cartItems.Clear();
+            // Show success message
+            MessageBox.Show(result.Message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Update UI
             UpdateCartDisplay();
             LoadBooks();
             LoadSales();
             ClearForm();
-            
-            // Enable undo button after successful sale processing
             UpdateUndoButtonState();
         }
 

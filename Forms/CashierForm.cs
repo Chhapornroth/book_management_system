@@ -260,12 +260,12 @@ namespace WindowsFormsApp.Forms
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(127, 140, 141),
                 AutoSize = true,
-                Location = new Point(650, 125)
+                Location = new Point(750, 125)
             };
             chk5Percent = new CheckBox 
             { 
                 Text = "5%", 
-                Location = new Point(650, 150), 
+                Location = new Point(750, 150), 
                 Size = new Size(60, 32),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 Appearance = Appearance.Button,
@@ -275,7 +275,7 @@ namespace WindowsFormsApp.Forms
             chk10Percent = new CheckBox 
             { 
                 Text = "10%", 
-                Location = new Point(720, 150), 
+                Location = new Point(820, 150), 
                 Size = new Size(60, 32),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 Appearance = Appearance.Button,
@@ -285,7 +285,7 @@ namespace WindowsFormsApp.Forms
             chk20Percent = new CheckBox 
             { 
                 Text = "20%", 
-                Location = new Point(790, 150), 
+                Location = new Point(890, 150), 
                 Size = new Size(60, 32),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 Appearance = Appearance.Button,

@@ -975,10 +975,11 @@ namespace WindowsFormsApp.Forms
             // Remove processed items from cart
             foreach (var processedItem in result.ProcessedItems)
             {
+                // Match by BookId, Quantity, and Price (CartItemData from Command namespace)
                 var itemToRemove = _cartItems.FirstOrDefault(i => 
                     i.BookId == processedItem.BookId && 
                     i.Quantity == processedItem.Quantity && 
-                    i.Price == processedItem.Price);
+                    Math.Abs(i.Price - processedItem.Price) < 0.01m); // Compare decimals with tolerance
                 if (itemToRemove != null)
                 {
                     _cartItems.Remove(itemToRemove);

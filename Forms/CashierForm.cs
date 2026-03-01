@@ -450,6 +450,21 @@ namespace WindowsFormsApp.Forms
             dgvCart.Columns.Add("Quantity", "Qty");
             dgvCart.Columns.Add("Discount", "Discount");
             dgvCart.Columns.Add("Subtotal", "Subtotal");
+            
+            // Add Remove button column
+            var removeButtonColumn = new DataGridViewButtonColumn
+            {
+                Name = "Remove",
+                HeaderText = "Action",
+                Text = "🗑️ Remove",
+                UseColumnTextForButtonValue = true,
+                Width = 100,
+                FlatStyle = FlatStyle.Flat
+            };
+            dgvCart.Columns.Add(removeButtonColumn);
+            
+            // Handle cell click for remove button
+            dgvCart.CellClick += DgvCart_CellClick;
 
             panel.Controls.Add(dgvCart);
             panel.Controls.Add(inputPanel);
@@ -867,6 +882,7 @@ namespace WindowsFormsApp.Forms
 
             _cartItems.Add(item);
             UpdateCartDisplay();
+            ClearForm();
         }
 
         private void UpdateCartDisplay()
@@ -879,10 +895,39 @@ namespace WindowsFormsApp.Forms
                 var subtotal = (item.Price * item.Quantity) - ((item.Price * item.Quantity) * item.Discount);
                 _currentTotal += subtotal;
                 dgvCart.Rows.Add(item.BookId, item.Title, item.Price.ToString("C"), item.Quantity,
-                    (item.Discount * 100).ToString("F0") + "%", subtotal.ToString("C"));
+                    (item.Discount * 100).ToString("F0") + "%", subtotal.ToString("C"), "🗑️ Remove");
             }
 
             lblTotal.Text = $"{_currentTotal:C}";
+        }
+
+        private void DgvCart_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Check if the clicked cell is the Remove button column
+            if (e.ColumnIndex == dgvCart.Columns["Remove"].Index && e.RowIndex >= 0)
+            {
+                // Get the row index
+                int rowIndex = e.RowIndex;
+                
+                if (rowIndex < _cartItems.Count)
+                {
+                    var itemToRemove = _cartItems[rowIndex];
+                    
+                    // Confirm removal
+                    var result = MessageBox.Show(
+                        $"Remove '{itemToRemove.Title}' (Qty: {itemToRemove.Quantity}) from cart?",
+                        "Remove Item",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question
+                    );
+                    
+                    if (result == DialogResult.Yes)
+                    {
+                        _cartItems.RemoveAt(rowIndex);
+                        UpdateCartDisplay();
+                    }
+                }
+            }
         }
 
         private void BtnProcessSale_Click(object sender, EventArgs e)

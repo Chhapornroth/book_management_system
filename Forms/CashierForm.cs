@@ -34,6 +34,7 @@ namespace WindowsFormsApp.Forms
         private readonly SaleRepository _saleRepo = new();
         private readonly SaleNotifier _saleNotifier = new();
         private readonly CommandInvoker _commandInvoker = new();
+        private readonly SaleProcessingFacade _saleProcessingFacade;
         private readonly User _currentUser;
         private List<CartItem> _cartItems = new();
 

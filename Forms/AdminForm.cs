@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using WindowsFormsApp.Data;
 using WindowsFormsApp.Models;
+using WindowsFormsApp.Observer;
 
 namespace WindowsFormsApp.Forms
 {
@@ -27,11 +28,18 @@ namespace WindowsFormsApp.Forms
         private readonly BookRepository _bookRepo = new();
         private readonly EmployeeRepository _employeeRepo = new();
         private readonly SaleRepository _saleRepo = new();
+        private readonly BookNotifier _bookNotifier = new();
+        private readonly EmployeeNotifier _employeeNotifier = new();
         private readonly User _currentUser;
 
         public AdminForm(User user)
         {
             _currentUser = user;
+            
+            // Attach observers (Observer Pattern)
+            _bookNotifier.Attach(new LoggingBookObserver());
+            _employeeNotifier.Attach(new LoggingEmployeeObserver());
+            
             InitializeComponent();
             LoadData();
         }
@@ -808,7 +816,12 @@ namespace WindowsFormsApp.Forms
                     AddingDate = dtpBookDate.Value.Date
                 };
 
-                _bookRepo.AddBook(book);
+                var bookId = _bookRepo.AddBook(book);
+                book.BookId = bookId; // Set the ID for observer
+                
+                // Notify observers (Observer Pattern)
+                _bookNotifier.NotifyBookAdded(book);
+                
                 LoadBooks();
                 ClearBookForm();
                 MessageBox.Show("Book added successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -864,6 +877,9 @@ namespace WindowsFormsApp.Forms
 
                 if (_bookRepo.UpdateBook(book))
                 {
+                    // Notify observers (Observer Pattern)
+                    _bookNotifier.NotifyBookUpdated(book);
+                    
                     LoadBooks();
                     MessageBox.Show("Book updated successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -897,6 +913,9 @@ namespace WindowsFormsApp.Forms
                     {
                         if (_bookRepo.DeleteBook(id))
                         {
+                            // Notify observers (Observer Pattern)
+                            _bookNotifier.NotifyBookDeleted(id);
+                            
                             LoadBooks();
                             ClearBookForm();
                             MessageBox.Show("Book deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -950,6 +969,8 @@ namespace WindowsFormsApp.Forms
                         {
                             if (_bookRepo.DeleteBook(bookId))
                             {
+                                // Notify observers (Observer Pattern)
+                                _bookNotifier.NotifyBookDeleted(bookId);
                                 deletedCount++;
                             }
                             else
@@ -1026,7 +1047,12 @@ namespace WindowsFormsApp.Forms
                     Role = cmbEmployeeRole.Text.Trim()
                 };
 
-                _employeeRepo.AddEmployee(employee);
+                var employeeId = _employeeRepo.AddEmployee(employee);
+                employee.EmployeeId = employeeId; // Set the ID for observer
+                
+                // Notify observers (Observer Pattern)
+                _employeeNotifier.NotifyEmployeeAdded(employee);
+                
                 LoadEmployees();
                 ClearEmployeeForm();
                 MessageBox.Show("Employee added successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1078,11 +1104,15 @@ namespace WindowsFormsApp.Forms
                     Name = txtEmployeeName.Text.Trim(),
                     Gender = cmbEmployeeGender.Text.Trim(),
                     PhoneNumber = txtEmployeePhone.Text.Trim(),
-                    Birthday = dtpEmployeeBirthday.Value.Date
+                    Birthday = dtpEmployeeBirthday.Value.Date,
+                    Role = cmbEmployeeRole.Text.Trim()
                 };
 
                 if (_employeeRepo.UpdateEmployee(employee))
                 {
+                    // Notify observers (Observer Pattern)
+                    _employeeNotifier.NotifyEmployeeUpdated(employee);
+                    
                     LoadEmployees();
                     MessageBox.Show("Employee updated successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1116,6 +1146,9 @@ namespace WindowsFormsApp.Forms
                     {
                         if (_employeeRepo.DeleteEmployee(id))
                         {
+                            // Notify observers (Observer Pattern)
+                            _employeeNotifier.NotifyEmployeeDeleted(id);
+                            
                             LoadEmployees();
                             ClearEmployeeForm();
                             MessageBox.Show("Employee deleted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1169,6 +1202,8 @@ namespace WindowsFormsApp.Forms
                         {
                             if (_employeeRepo.DeleteEmployee(employeeId))
                             {
+                                // Notify observers (Observer Pattern)
+                                _employeeNotifier.NotifyEmployeeDeleted(employeeId);
                                 deletedCount++;
                             }
                             else

@@ -155,6 +155,35 @@ namespace WindowsFormsApp.Data
             
             return cmd.ExecuteNonQuery() > 0;
         }
+
+        /// <summary>
+        /// Restores stock (increases stock) - used for undoing sales
+        /// </summary>
+        public bool RestoreStock(int bookId, int quantity)
+        {
+            if (bookId <= 0) throw new ArgumentException("Invalid book ID", nameof(bookId));
+            if (quantity <= 0) throw new ArgumentException("Quantity must be positive", nameof(quantity));
+
+            using var conn = DbConnectionManager.Instance.CreateConnection();
+            conn.Open();
+            
+            // Check if book exists
+            using var checkCmd = new NpgsqlCommand("SELECT book_id FROM books WHERE book_id = @id", conn);
+            checkCmd.Parameters.AddWithValue("id", bookId);
+            var result = checkCmd.ExecuteScalar();
+            
+            if (result == null || result == DBNull.Value)
+            {
+                return false; // Book not found
+            }
+            
+            // Increase stock
+            using var cmd = new NpgsqlCommand("UPDATE books SET stock = stock + @qty WHERE book_id = @id", conn);
+            cmd.Parameters.AddWithValue("id", bookId);
+            cmd.Parameters.AddWithValue("qty", quantity);
+            
+            return cmd.ExecuteNonQuery() > 0;
+        }
     }
 }
 

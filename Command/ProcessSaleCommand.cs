@@ -107,15 +107,20 @@ namespace WindowsFormsApp.Command
             {
                 try
                 {
-                    // Restore stock
-                    var book = _bookRepo.GetBookById(sale.BookId);
-                    if (book != null)
+                    // Restore stock using RestoreStock method (increases stock)
+                    if (!_bookRepo.RestoreStock(sale.BookId, sale.Quantity))
                     {
-                        _bookRepo.UpdateStock(sale.BookId, -sale.Quantity);
+                        Debug.WriteLine($"Failed to restore stock for book ID {sale.BookId}");
+                        allUndone = false;
+                        continue;
                     }
 
                     // Remove sale from repository
-                    _saleRepo.DeleteSale(sale.SaleId);
+                    if (!_saleRepo.DeleteSale(sale.SaleId))
+                    {
+                        Debug.WriteLine($"Failed to delete sale {sale.SaleId}");
+                        allUndone = false;
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -252,10 +252,10 @@ CSharpe/
 │   └── UserFactory.cs
 ├── Builder/                 # Builder Pattern
 │   └── SaleBuilder.cs
-├── Strategy/                # Strategy Pattern
-│   ├── IPaymentStrategy.cs
-│   ├── CashPaymentStrategy.cs
-│   └── CardPaymentStrategy.cs
+├── Command/                 # Command Pattern
+│   ├── ICommand.cs
+│   ├── ProcessSaleCommand.cs
+│   └── CommandInvoker.cs
 ├── Observer/                # Observer Pattern
 │   ├── ISaleObserver.cs
 │   ├── SaleNotifier.cs

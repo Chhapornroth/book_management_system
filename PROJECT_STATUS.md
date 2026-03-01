@@ -22,7 +22,7 @@ This is a **fully functional** C# Windows Forms BookStore Management System with
 1. **Singleton** - `DbConnectionManager` for database connections
 2. **Factory** - `UserFactory` creates Admin/Cashier users
 3. **Builder** - `SaleBuilder` constructs sale objects step-by-step
-4. **Strategy** - `IPaymentStrategy` with Cash/Card implementations
+4. **Command** - `ICommand` and `ProcessSaleCommand` for encapsulating sale operations with undo support
 5. **Observer** - `ISaleObserver` notifies when sales are created
 
 ### ✅ Database Schema
@@ -92,7 +92,7 @@ dotnet run
 ├── Forms/           # Windows Forms UI (DashboardForm, LoginForm, AdminForm, CashierForm)
 ├── Factory/         # UserFactory pattern
 ├── Builder/         # SaleBuilder pattern
-├── Strategy/        # Payment strategies
+├── Command/         # Command pattern for sale operations
 ├── Observer/         # Sale observer pattern
 ├── Singleton/       # Database connection manager
 └── database/        # PostgreSQL schema and scripts

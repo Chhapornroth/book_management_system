@@ -5,10 +5,10 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using WindowsFormsApp.Builder;
+using WindowsFormsApp.Command;
 using WindowsFormsApp.Data;
 using WindowsFormsApp.Models;
 using WindowsFormsApp.Observer;
-using WindowsFormsApp.Strategy;
 
 namespace WindowsFormsApp.Forms
 {
@@ -32,6 +32,7 @@ namespace WindowsFormsApp.Forms
         private readonly BookRepository _bookRepo = new();
         private readonly SaleRepository _saleRepo = new();
         private readonly SaleNotifier _saleNotifier = new();
+        private readonly CommandInvoker _commandInvoker = new();
         private readonly User _currentUser;
         private List<CartItem> _cartItems = new();
 
@@ -897,68 +898,43 @@ namespace WindowsFormsApp.Forms
                 }
             }
 
-            // Process each item in cart with transaction-like behavior
-            var processedSales = new List<Sale>();
-            var failedItems = new List<CartItem>();
-
-            foreach (var item in _cartItems)
+            // Use Command Pattern to process sales
+            // Convert CartItem to CartItemData for command
+            var cartItemData = _cartItems.Select(item => new WindowsFormsApp.Command.CartItemData
             {
-                try
-                {
-                    // Re-validate stock before processing (stock may have changed)
-                    var book = _bookRepo.GetBookById(item.BookId);
-                    if (book == null)
-                    {
-                        failedItems.Add(item);
-                        continue;
-                    }
+                BookId = item.BookId,
+                Title = item.Title,
+                Price = item.Price,
+                Quantity = item.Quantity,
+                Discount = item.Discount
+            }).ToList();
 
-                    if (book.Stock < item.Quantity)
-                    {
-                        failedItems.Add(item);
-                        continue;
-                    }
+            var processSaleCommand = new ProcessSaleCommand(
+                txtCustomerName.Text,
+                cartItemData,
+                _currentUser.Id,
+                _bookRepo,
+                _saleRepo,
+                _saleNotifier
+            );
 
-                    var sale = new SaleBuilder()
-                        .SetCustomerName(txtCustomerName.Text)
-                        .SetBookId(item.BookId)
-                        .SetEmployeeId(_currentUser.Id)
-                        .SetPrice(item.Price)
-                        .SetQuantity(item.Quantity)
-                        .SetDiscount(item.Discount)
-                        .SetSaleDate(DateTime.Now)
-                        .Build();
+            bool success = _commandInvoker.ExecuteCommand(processSaleCommand);
 
-                    // Update stock first (atomic operation with WHERE clause)
-                    if (!_bookRepo.UpdateStock(item.BookId, item.Quantity))
-                    {
-                        failedItems.Add(item);
-                        continue;
-                    }
-
-                    // Then add sale
-                    _saleRepo.AddSale(sale);
-                    processedSales.Add(sale);
-
-                    // Notify observers (Observer Pattern)
-                    _saleNotifier.Notify(sale);
-                }
-                catch (Exception ex)
-                {
-                    failedItems.Add(item);
-                    MessageBox.Show($"Error processing item '{item.Title}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-
-            // Remove failed items from cart
-            foreach (var item in failedItems)
+            if (!success || processSaleCommand.ProcessedCount == 0)
             {
-                _cartItems.Remove(item);
+                MessageBox.Show("No items were processed. Please check stock availability.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             // Report results
-            if (failedItems.Count > 0)
+            var processedItems = processSaleCommand.GetProcessedItems();
+            var failedCount = processSaleCommand.FailedCount;
+
+            if (failedCount > 0)
             {
+                var failedItems = _cartItems.Where(item => 
+                    !processedItems.Any(pi => pi.BookId == item.BookId && pi.Quantity == item.Quantity)).ToList();
+                
                 var message = $"Some items could not be processed:\n";
                 foreach (var item in failedItems)
                 {
@@ -967,13 +943,20 @@ namespace WindowsFormsApp.Forms
                 MessageBox.Show(message, "Partial Success", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            if (processedSales.Count == 0)
+            // Remove processed items from cart
+            foreach (var processedItem in processedItems)
             {
-                MessageBox.Show("No items were processed. Please check stock availability.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                var itemToRemove = _cartItems.FirstOrDefault(i => 
+                    i.BookId == processedItem.BookId && 
+                    i.Quantity == processedItem.Quantity && 
+                    i.Price == processedItem.Price);
+                if (itemToRemove != null)
+                {
+                    _cartItems.Remove(itemToRemove);
+                }
             }
 
-            MessageBox.Show($"Sale processed successfully! Total: {_currentTotal:C}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"Sale processed successfully! {processSaleCommand.ProcessedCount} item(s) processed. Total: {_currentTotal:C}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             
             _cartItems.Clear();
             UpdateCartDisplay();
@@ -1001,10 +984,11 @@ namespace WindowsFormsApp.Forms
             if (pnlBookSearch != null) pnlBookSearch.Visible = false;
         }
 
+        // CartItem is now defined in Command namespace
         private class CartItem
         {
             public int BookId { get; set; }
-            public string Title { get; set; }
+            public string Title { get; set; } = string.Empty;
             public decimal Price { get; set; }
             public int Quantity { get; set; }
             public decimal Discount { get; set; }
